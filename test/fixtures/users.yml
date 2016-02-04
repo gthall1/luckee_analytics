@@ -1,0 +1,47 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  email: MyString
+  user_created: 2016-02-01 23:38:04
+  user_updated: 2016-02-01 23:38:04
+  current_credits: 
+  lifetime_credits: 
+  admin: false
+  zipcode: MyString
+  provider: MyString
+  cashed_out_credits: 
+  cash_outs: 
+  cash_out_value: 
+  surveys_complete: 
+  arrival_id: 
+  origin_refer: MyString
+  origin_device: MyString
+  most_recent_device: MyString
+  game_sessions: 
+  unique_games_played: 
+  time_spent_playing: 
+  visits_to_site: 
+
+two:
+  name: MyString
+  email: MyString
+  user_created: 2016-02-01 23:38:04
+  user_updated: 2016-02-01 23:38:04
+  current_credits: 
+  lifetime_credits: 
+  admin: false
+  zipcode: MyString
+  provider: MyString
+  cashed_out_credits: 
+  cash_outs: 
+  cash_out_value: 
+  surveys_complete: 
+  arrival_id: 
+  origin_refer: MyString
+  origin_device: MyString
+  most_recent_device: MyString
+  game_sessions: 
+  unique_games_played: 
+  time_spent_playing: 
+  visits_to_site: 

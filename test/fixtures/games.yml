@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  slug: MyString
+  sort_order: 
+  previous_sort_order: 
+  sort_order_hash: MyString
+  sort_order_changed: 2016-02-01 23:53:42
+  game_added: 2016-02-01 23:53:42
+  credits_earned_from_game: 
+  device_type: 
+  games_played: 
+  time_spent_on_game: 
+  avg_credits_per_game: 1.5
+  avg_time_per_game: 1.5
+  num_users_who_played: 
+
+two:
+  name: MyString
+  slug: MyString
+  sort_order: 
+  previous_sort_order: 
+  sort_order_hash: MyString
+  sort_order_changed: 2016-02-01 23:53:42
+  game_added: 2016-02-01 23:53:42
+  credits_earned_from_game: 
+  device_type: 
+  games_played: 
+  time_spent_on_game: 
+  avg_credits_per_game: 1.5
+  avg_time_per_game: 1.5
+  num_users_who_played: 

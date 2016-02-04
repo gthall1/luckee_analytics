@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  credits_earned: 
+  cash: 
+  cash_out_type: MyString
+  cash_out_date: 2016-02-02 00:05:17
+  user_id: 
+  user_created: 2016-02-02 00:05:17
+  user_games_played: 
+  user_time_playing: 
+  user_credits_per_game: 1.5
+  user_credits_per_minute: 1.5
+  referal: MyString
+  device: MyString
+  arrival_id: 
+
+two:
+  credits_earned: 
+  cash: 
+  cash_out_type: MyString
+  cash_out_date: 2016-02-02 00:05:17
+  user_id: 
+  user_created: 2016-02-02 00:05:17
+  user_games_played: 
+  user_time_playing: 
+  user_credits_per_game: 1.5
+  user_credits_per_minute: 1.5
+  referal: MyString
+  device: MyString
+  arrival_id: 

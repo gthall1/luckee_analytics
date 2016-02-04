@@ -1,14 +1,34 @@
-namespace :db do
-  desc "Restore latest Heroku db backup locally"
-  task restore: :environment do
-    # Get the current db config
-    config = Rails.configuration.database_configuration[Rails.env]
-    # Get around an issue with the Heroku Toolbelt https://github.com/sstephenson/rbenv/issues/400#issuecomment-18742700
-    Bundler.with_clean_env do
-       # Download the latest backup to a file called latest.dump in tmp folder
-      `curl -o tmp/latest.dump \`heroku pg:backups  postgres://rhzsjhdkexfstm:pkBvaR0jRycUaAlrtPBDp2EYeg@ec2-107-22-161-155.compute-1.amazonaws.com:5432/dd7514pc7ca93 -q --remote production\``
-       # Restore the backup to the current database
-      `export PGPASSWORD=#{config["password"]} && pg_restore --verbose  --clean  --no-acl --no-owner --host=#{config["host"]} --port=#{config["port"]} --username=#{config["username"]} --dbname=#{config["database"]} tmp/latest.dump`
-    end
-  end
+#API KEY Ibvvse7ZX1CKzthJ2xB2_Q
+#getluckee.com/api/v1/Ibvvse7ZX1CKzthJ2xB2_Q/user_surveys?start=1&end=100
+require "#{Rails.root}/lib/import_helper.rb"
+
+include ImportHelper
+
+BATCH_SIZE = 300
+
+task :import_data => :environment do |t,args|
+   # get_game_sessions
+   # get_users
+   # get_arrivals
+   # get_cash_outs
+    #get_user_surveys
+   # get_surveys
+   # get_games
+
+end
+
+task :denormalize_things => :environment do |t,args|
+    denormalize_arrivals
+    denormalize_users
+    denormalize_game_sessions
+    denormalize_games
+    denormalize_surveys
+    denormalize_cashouts
+    denormalize_user_surveys
+end
+
+task :aggregate_data => :environment do |t,args|
+   # aggregate_daily_data
+    #aggregate_weekly_data
+    aggregate_total_data
 end

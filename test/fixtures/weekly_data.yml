@@ -1,0 +1,33 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date: 2016-02-02 21:16:32
+  arrivals: 
+  sign_ups: 
+  cash_outs: 
+  surveys: 
+  games_played: 
+  credits_earned: 
+  cash_payed_out: 
+  time_spent_playing: 
+  mobile_arrivals: 
+  desktop_arrivals: 
+  unique_users: 
+  credits_per_minute: 1.5
+  cost_per_minute: 1.5
+
+two:
+  date: 2016-02-02 21:16:32
+  arrivals: 
+  sign_ups: 
+  cash_outs: 
+  surveys: 
+  games_played: 
+  credits_earned: 
+  cash_payed_out: 
+  time_spent_playing: 
+  mobile_arrivals: 
+  desktop_arrivals: 
+  unique_users: 
+  credits_per_minute: 1.5
+  cost_per_minute: 1.5

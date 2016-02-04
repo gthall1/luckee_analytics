@@ -1,0 +1,25 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  game_id: 
+  user_id: 
+  game_created: 2016-02-01 23:03:07
+  game_updated: 2016-02-01 23:03:07
+  credits_earned: 
+  score: 
+  active: false
+  arrival_id: 
+  user_name: MyString
+  game_name: MyString
+
+two:
+  game_id: 
+  user_id: 
+  game_created: 2016-02-01 23:03:07
+  game_updated: 2016-02-01 23:03:07
+  credits_earned: 
+  score: 
+  active: false
+  arrival_id: 
+  user_name: MyString
+  game_name: MyString

@@ -530,7 +530,8 @@ module DataProcessor
                 games_per_arrival: game_sessions.size.to_f/arrivals.size.to_f, 
                 desktop_arrivals: arrivals.where(mobile:0).size, 
                 credits_per_minute: credits_earned.to_f/(time_spent_playing.to_f/60.to_f),
-                cost_per_minute:  cash_payed/(time_spent_playing.to_f/60.to_f)
+                cost_per_minute:  cash_payed/(time_spent_playing.to_f/60.to_f),
+                avg_time_per_arrival: time_spent_playing.to_f/arrivals.size.to_f
             })
 
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160204010202) do
+ActiveRecord::Schema.define(version: 20160204043136) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -157,6 +157,7 @@ ActiveRecord::Schema.define(version: 20160204010202) do
     t.float    "games_per_arrival"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float    "avg_time_per_arrival"
   end
 
   create_table "user_surveys", force: true do |t|

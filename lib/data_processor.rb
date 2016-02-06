@@ -268,6 +268,8 @@ module DataProcessor
     end
 
     def denormalize_game_sessions
+        p "Denormalizing game sessions and performing calculations"
+
         game_sessions = GameSession.where("created_at >= ?", Time.now - 23.hours)
 
         game_sessions.each do | game_session| 
@@ -293,7 +295,7 @@ module DataProcessor
     end
 
     def denormalize_games 
-
+        p "Denormalizing games and performing calculations"
         games = Game.where.not(device_type:nil)
 
         games.each do | game|
@@ -314,6 +316,7 @@ module DataProcessor
                         score = 0 if ga.score.nil? 
                         score
                         }.sum.to_f)/g.total_games_played.to_f
+                g.credits_per_minute= g.total_credits_earned/(g.total_time_spent_on_game.to_f/60.to_f)
                 g.credits_per_game = g.total_credits_earned.to_f/g.total_games_played.to_f
                 g.save
             end

@@ -20,7 +20,7 @@
 <%= render partial: "/common/dash_widget", :locals => {data: @total.credits_earned, title: "Credits Earned", icon: "fa-certificate" , bg_color: "green"} %>
 
   <%= render partial: "/common/dash_widget", :locals => {data: @total.credits_per_minute.round(2),title:"Credits Per Min", icon: "fa-hourglass-start", bg_color:"blue" } %>
-  
+
 <div class="row">
     <div class="col-md-12">
         <div class="box">
@@ -77,7 +77,7 @@
                     <h3 class="box-title">Last 500 Game Sessions</h3>
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                    <table id="userTable" class="table table-bordered table-hover">
+                    <table id="gameTable" class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th>Started</th>
@@ -94,7 +94,6 @@
                             </tr>
                         </thead>
 
-<!-- #<GameSession id: 49516, game_id: 8, user_id: 383, credits_earned: 16, score: 117, active: false, arrival_id: 5843, browser: "Safari", landing_page: nil, referer: nil, platform: "iPhone", user_name: "fletcherfair", game_name: nil, user_provider: nil, time_played: 103, credits_per_minute: 9.32038834951456, cost_per_minute: nil, user_created: "2016-02-04 01:26:38", game_session_created: "2016-02-05 15:56:07", game_session_updated: "2016-02-05 15:57:51", created_at: "2016-02-05 16:00:01", updated_at: "2016-02-06 01:08:06", version: nil> -->
                         <tbody>
                             <% @game_sessions.each do | g | %>
                                 <tr>
@@ -124,7 +123,7 @@
  <script src="assets/chartjs/Chart.min.js"></script>
  <script src="assets/datatables/jquery.dataTables.min.js"></script>
  <script>
-    $('#userTable').DataTable({
+    $('#gameTable').DataTable({
       "paging": true,
       "lengthChange": true,
       "searching": true,

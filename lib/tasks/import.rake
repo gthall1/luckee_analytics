@@ -7,19 +7,19 @@ include ImportHelper
 BATCH_SIZE = 300
 
 task :import_data => :environment do |t,args|
-    #grab_data
-    #denormalize_data
+    grab_data
+    denormalize_data
     aggregate_data
 end
 
 def grab_data
-   get_game_sessions
-   get_users
-   get_arrivals
-   get_cash_outs
-   get_user_surveys
-   get_surveys
-   get_games 
+     get_game_sessions
+     get_users
+     get_arrivals
+     get_cash_outs
+     get_user_surveys
+     get_surveys
+     get_games 
 end
 
 def denormalize_data
@@ -33,8 +33,8 @@ def denormalize_data
 end
 
 def aggregate_data
-   # aggregate_daily_data
+    aggregate_daily_data
     aggregate_weekly_data
-   # aggregate_monthly_data
-   # aggregate_total_data
+    aggregate_monthly_data
+    aggregate_total_data
 end

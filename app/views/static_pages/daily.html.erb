@@ -1,12 +1,12 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <h1>
-    Luckee Monthly Data
-    <small>Widgets show data for current month.</small>
+    Luckee Daily Data
+    <small>Widgets show data for current day.</small>
   </h1>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> Data</a></li>
-    <li class="active">Monthly</li>
+    <li class="active">Daily</li>
   </ol>
 </section>
 
@@ -26,19 +26,20 @@
         <div class="box">
             <div class="box-body">
                 <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                         <p class="text-center">
-                            <strong>Monthly User Stats: <%= @all_months.reverse.first.date.strftime("%m/%d/%Y") %> - <%= Time.now.beginning_of_month.strftime("%m/%d/%Y")%></strong>
+                            <strong>Daily User Stats: <%= @some_days.first.date.strftime("%m/%d/%Y") %> - <%= Time.now.beginning_of_day.strftime("%m/%d/%Y")%></strong>
                         </p>
                         <div class="chart">
                             <!-- Sales Chart Canvas -->
-                            <canvas id="monthlyUsers" style="height: 180px;"></canvas>
+                            <canvas id="dailyUsers" style="height: 180px;"></canvas>
                         </div><!-- /.chart-responsive -->
                     </div><!-- /.col -->
-
-                    <div class="col-md-4">
-                             <%= render partial: "/common/monthly_goals" %>
-                    </div><!-- /.col -->
+                    <% if false %>
+                        <div class="col-md-4">
+                                 <%= render partial: "/common/daily_goals" %>
+                        </div><!-- /.col -->
+                    <% end %>
 
                 </div><!-- /.row -->
             </div><!-- ./box-body --> 
@@ -69,23 +70,21 @@
 
 
 </section><!-- /.content -->
-
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header">
-                    <h3 class="box-title">Monthly Metrics Table</h3>
+                    <h3 class="box-title">Daily Metrics Table</h3>
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                    <table id="monthlyTable" class="table table-bordered table-hover">
+                    <table id="weeklyTable" class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>Month Starting</th>
+                                <th>Date</th>
                                 <th>Arrivals</th>
                                 <th>New Users</th>
                                 <th>Active Users</th>
-                                <th>User Churn</th>
                                 <th>Cash outs</th>
                                 <th>Surveys</th>
                                 <th>Games Played</th>
@@ -96,20 +95,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <% @all_months.each do | m | %>
+                            <% @all_days.each do | d | %>
                                 <tr>
-                                    <td><%= m.date.strftime("%m/%d/%Y") %></td>
-                                    <td><%= m.arrivals %></td>
-                                    <td><%= m.sign_ups %></td>
-                                    <td><%= m.active_users %></td>
-                                    <td><%= m.user_churn %></td>
-                                    <td><%= m.cash_outs %></td>
-                                    <td><%= m.surveys %></td>
-                                    <td><%= m.games_played %></td>
-                                    <td><%= ((m.time_spent_playing.to_f/60.to_f)/60.to_f).round(2) %> hrs</td>
-                                    <td><%= m.mobile_arrivals %></td>
-                                    <td><%= m.desktop_arrivals%></td>
-                                    <td><%= m.credits_per_minute.round(2) %></td>
+                                    <td><%= d.date.strftime("%m/%d/%Y") %></td>
+                                    <td><%= d.arrivals %></td>
+                                    <td><%= d.sign_ups %></td>
+                                    <td><%= d.active_users %></td>
+                                    <td><%= d.cash_outs %></td>
+                                    <td><%= d.surveys %></td>
+                                    <td><%= d.games_played %></td>
+                                    <td><%= ((d.time_spent_playing.to_f/60.to_f)/60.to_f).round(2) %> hrs</td>
+                                    <td><%= d.mobile_arrivals %></td>
+                                    <td><%= d.desktop_arrivals%></td>
+                                    <td><%= d.credits_per_minute.round(2) %></td>
                                 </tr>
                             <% end %>
                         </tbody>
@@ -124,7 +122,7 @@
  <script src="assets/chartjs/Chart.min.js"></script>
  <script src="assets/datatables/jquery.dataTables.min.js"></script>
  <script>
-    $('#monthlyTable').DataTable({
+    $('#weeklyTable').DataTable({
       "paging": true,
       "lengthChange": true,
       "searching": false,
@@ -134,5 +132,5 @@
     });
  </script>
 
- <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Sign Ups", color: "#00a65a", data: @some_months.map{|m| m.sign_ups}},{name: "Active Users", color: "#337ab7", data: @some_months.map{|m| m.active_users}}], chart_id: "monthlyUsers", labels: @some_months.map{|m| m.date.strftime("%m/%d/%Y")}} %>
+ <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Sign Ups", color: "#00a65a", data: @some_days.map{|w| w.sign_ups}},{name: "Active Users", color: "#337ab7", data: @some_days.map{|d| d.active_users}},{name: "Surveys Taken", color: "#dd4b39", data: @some_days.map{|d| d.surveys}}], chart_id: "dailyUsers", labels: @some_days.map{|d| d.date.strftime("%m/%d/%Y")}} %>
 <% end %>

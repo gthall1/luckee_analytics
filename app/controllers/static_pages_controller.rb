@@ -3,6 +3,13 @@ class StaticPagesController < ApplicationController
     def main
         @active = "main"
         @total = TotalDatum.first
+        @latest_users = User.order("user_created desc").limit(7)
+    end
+
+    def daily
+        @total = DailyDatum.last
+        @all_days = DailyDatum.all.order('date desc')
+        @some_days = DailyDatum.where(:date => (Time.now - 2.weeks).beginning_of_day..Time.now).order('date asc')
     end
 
     def weekly

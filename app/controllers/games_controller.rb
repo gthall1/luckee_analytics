@@ -14,5 +14,7 @@ class GamesController < ApplicationController
 
     def show
         @game = Game.find(params[:id])
+        @game_sessions = GameSession.where(game_id:@game.id)
+        @last_bunch_sessions = GameSession.where(game_id:@game.id).limit(1000)
     end
 end

@@ -20,10 +20,20 @@
                 <ul class="treeview-menu">
                     <li <% if @active == "monthly"%>class="active"<% end %>><a href="/monthly">Monthly</a></li>
                     <li <% if @active == "weekly"%>class="active"<% end %>><a href="/weekly">Weekly</a></li>
+                    <li <% if @active == "daily"%>class="active"<% end %>><a href="/daily">Daily</a></li>
+
                 </ul>
             </li>            
             <li><a href="/users"><i class="fa fa-users"></i> <span>Users</span></a></li>
-            <li><a href="/games"><i class="fa fa-gamepad"></i> <span>Games</span></a></li>
+            <li class="treeview">
+                <a href="#"><i class="fa fa-gamepad"></i> <span>Games</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a href="/games">Main Game Dashboard</a></li>
+                    <% Game.where.not(device_type:nil).all.each do | g | %>
+                         <li><%= link_to g.name, game_path(g.id) %></li>
+                    <% end %>
+                </ul>
+            </li>  
 
         </ul><!-- /.sidebar-menu -->
     </section>

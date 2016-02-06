@@ -14,7 +14,11 @@
 <section class="content">
 
 <%= render partial: "/common/dash_widget", :locals => {data: @users.size, title: "Total Users", icon: "fa-users", bg_color:"blue" } %>
-<%= render partial: "/common/dash_widget", :locals => {data: CashOut.all.map{|c| c.user_id}.uniq.size , title: "Unique Users who Cashed Out", icon: "fa-money", bg_color:"green" } %>
+
+<%= render partial: "/common/dash_widget", :locals => {data: CashOut.all.map{|c| c.user_id}.uniq.size , title: "Uniq-U Cashed out", icon: "fa-money", bg_color:"green" } %>
+
+<%= render partial: "/common/dash_widget", :locals => {data: UserSurvey.group(:user_id).size.size, title: "Uniq-U Survey", icon: "fa-files-o",bg_color:"red" } %>
+
 
 <div class="row">
     <div class="col-md-12">

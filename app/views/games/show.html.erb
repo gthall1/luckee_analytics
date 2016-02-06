@@ -12,16 +12,13 @@
 
 <!-- Main content -->
 <section class="content">
+<%= render partial: "/common/dash_widget", :locals => {data: @game.total_games_played, title: "Games Played", icon: "fa-gamepad" } %>
 
-<%= render partial: "/common/dash_widget", :locals => {data: @user.visits_to_site, title: "Total Visits", icon: "fa-rocket", bg_color:"blue" } %>
+<%= render partial: "/common/dash_widget", :locals => {data: @game.total_credits_earned, title: "Credits Earned", icon: "fa-certificate",bg_color:"green" } %>
 
-<%= render partial: "/common/dash_widget", :locals => {data: @user.current_credits, title: "Current Credits", icon: "fa-certificate" } %>
+<%= render partial: "/common/dash_widget", :locals => {data: @game.credits_per_minute.round(2) ,title:"Credits Per Minute", icon: "fa-hourglass-start" } %>
 
-<%= render partial: "/common/dash_widget", :locals => {data: @user.cash_outs,title:"Cash Outs",icon: "fa-dollar",bg_color:"green" } %>
-
-<%= render partial: "/common/dash_widget", :locals => {data: "$#{@user.cash_out_value}",title:"Cash Paid Out", icon: "fa-money",bg_color:"green" } %>
-
-
+<%= render partial: "/common/dash_widget", :locals => {data: (@game.total_time_spent_on_game.to_f/60.to_f/60.to_f).round(2), title: "Hours Played", icon: "fa-clock-o"  } %>
 
 <div class="row">
     <div class="col-md-12">
@@ -30,7 +27,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <p class="text-center">
-                            <strong>User Visit History: <%= @user.user_created.strftime("%m/%d/%Y") %> - <%= Time.now.strftime("%m/%d/%Y")%></strong>
+                            <strong>Gameplay History: <%= @game_sessions.first.game_session_created.strftime("%m/%d/%Y") %> - <%= Time.now.strftime("%m/%d/%Y")%></strong>
                         </p>
                         <div class="chart">
                             <!-- Sales Chart Canvas -->
@@ -43,26 +40,82 @@
         </div>
     </div>
 </div>
-<%= render partial: "/common/dash_widget", :locals => {data: @user.game_sessions, title: "Games Played", icon: "fa-gamepad" } %>
             
-<%= render partial: "/common/dash_widget", :locals => {data: @user.credits_per_game.round(2),title:"Credits Per Game", icon: "fa-industry" } %>
-<%= render partial: "/common/dash_widget", :locals => {data: @user.unique_games_played,title:"Unique Games Played", icon: "fa-futbol-o" } %>
+<%= render partial: "/common/dash_widget", :locals => {data: @game.credits_per_game.round(2),title:"Credits Per Game", icon: "fa-industry" } %>
 
-<%= render partial: "/common/dash_widget", :locals => {data: @user.lifetime_credits, title: "Lifetime Credits", icon: "fa-plus" } %>
-<%= render partial: "/common/dash_widget", :locals => {data: (@user.time_spent_playing.to_f/60.to_f/60.to_f).round(2), title: "Hours Played", icon: "fa-clock-o"  } %>
-<%= render partial: "/common/dash_widget", :locals => {data: @user.credits_per_minute.round(2),title:"Credits Per Min", icon: "fa-hourglass-start" } %>
+<%= render partial: "/common/dash_widget", :locals => {data: (@game.time_per_game.to_f/60.to_f).round(2),title:"Mins Per Game", icon: "fa-hourglass-end" } %>
 
-<%= render partial: "/common/dash_widget", :locals => {data: @user.surveys_complete, title: "Surveys Taken", icon: "fa-files-o", bg_color:"red" } %>
+<%= render partial: "/common/dash_widget", :locals => {data: @game.avg_score.round(2),title:"Average Score", icon: "fa-futbol-o" } %>
 
+<%= render partial: "/common/dash_widget", :locals => {data: @game.total_users_who_played,title:"Uniq-U Who Play", icon: "fa-users" } %>
 
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Last 1000 Game Sessions</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <table id="gameTable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Started</th>
+                                <th>Game Name</th>
+                                <th>Credits Earned</th>
+                                <th>Minutes Played</th>
+                                <th>User</th>
+                                <th>Score</th>
+                                <th>Active</th>
+                                <th>Browser</th>
+                                <th>Platform</th>
+                                <th>Credits Per Minute</th>
+                                <th>Version</th>
+                            </tr>
+                        </thead>
 
+                        <tbody>
+                            <% @last_bunch_sessions .each do | g | %>
+                                <tr>
+                                    <td><%= g.game_session_created.strftime("%m/%d/%Y") %></td>
+                                    <td><%= g.game.name %></td>
+                                    <td><%= g.credits_earned %></td>
+                                    <td><%= (g.time_played.to_f/60.to_f).round(2) %></td>
+                                    <td><%= link_to g.user.name, user_path(g.user.id) unless g.user.nil?%></td>
+                                    <td><%= g.score %></td>
+                                    <td><%= g.active %></td>
+                                    <td><%= g.arrival.browser  if !g.arrival.nil? %></td>
+                                    <td><%= g.arrival.platform if !g.arrival.nil? %></td>
+                                    <td><%= g.credits_per_minute.round(2) if !g.credits_per_minute.nil? %></td>
+                                    <td><%= g.version %></td>
+                                </tr>
+                            <% end %>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <br style='clear: both' />
 
 
 </section><!-- /.content -->
 
 <% content_for :extra_js do %>
-
+ <script src="/assets/datatables/jquery.dataTables.min.js"></script>
+ <script>
+    $('#gameTable').DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+ </script>
  <script src="/assets/chartjs/Chart.min.js"></script>
-     <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Total Visits", color: "#00a65a", data: @arrivals.group("DATE_TRUNC('week', arrival_created)").count.sort.map{|u| u[1] }}], chart_id: "totalVisits", labels: @arrivals.group("DATE_TRUNC('week', arrival_created)").count.sort.map{|u| u[0].strftime("%m/%d/%Y")}} %>
+     <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Games Played", color: "#00a65a", data: @game_sessions.group("DATE_TRUNC('week', game_session_created)").count.sort.map{|u| u[1] }}], chart_id: "totalVisits", labels: @game_sessions.group("DATE_TRUNC('week', game_session_created)").count.sort.map{|u| u[0].strftime("%m/%d/%Y")}} %>
+
 <% end %>

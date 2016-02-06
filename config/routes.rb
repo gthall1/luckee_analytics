@@ -3,8 +3,16 @@ LuckeeMetrics::Application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  # root 'welcome#index'
+  root 'static_pages#main'
 
+  get 'weekly' => 'static_pages#weekly'
+  get 'monthly' => 'static_pages#monthly'
+  
+  get 'users' => 'users#index'
+  get 'users/:id' => 'users#show', as: :user
+
+  get 'games' => 'games#index'
+  get 'games/:id' => 'games#show', as: :game
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

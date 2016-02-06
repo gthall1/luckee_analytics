@@ -1,0 +1,116 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Luckee User Data
+    <small>A little info about our users!</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Data</a></li>
+    <li class="active">Users</li>
+  </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+<%= render partial: "/common/dash_widget", :locals => {data: @users.size, title: "Total Users", icon: "fa-users", bg_color:"blue" } %>
+<%= render partial: "/common/dash_widget", :locals => {data: CashOut.all.map{|c| c.user_id}.uniq.size , title: "Unique Users who Cashed Out", icon: "fa-money", bg_color:"green" } %>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="text-center">
+                            <strong>User Growth: <%= @weekly_users.first.date.strftime("%m/%d/%Y") %> - <%= Time.now.strftime("%m/%d/%Y")%></strong>
+                        </p>
+                        <div class="chart">
+                            <!-- Sales Chart Canvas -->
+                            <canvas id="totalUsers" style="height: 180px;"></canvas>
+                        </div><!-- /.chart-responsive -->
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- ./box-body --> 
+        </div>
+    </div>
+</div>
+   
+
+
+
+    <br style='clear: both' />
+
+
+</section><!-- /.content -->
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Users Table</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <table id="userTable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Created</th>
+                                <th>Name</th>
+                                <th>Lifetime Credits</th>
+                                <th>Current Credits</th>
+                                <th>Cash Outs</th>
+                                <th>Surveys</th>
+                                <th>Recent Platform</th>
+                                <th>Uniq Games Played</th>
+                                <th>Total Games Played</th>
+                                <th>Hours Played</th>
+                                <th>Credits Per Min</th>
+                                <th>Visits To Site</th>
+                                <th>Most Recent Visit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% @users.each do | u | %>
+                                <tr>
+                                    <td><%= u.user_created.strftime("%m/%d/%Y") %></td>
+                                    <td><%= link_to u.name, user_path(u.id)%></td>
+                                    <td><%= u.lifetime_credits %></td>
+                                    <td><%= u.current_credits %></td>
+                                    <td><%= u.cash_outs %></td>
+                                    <td><%= u.surveys_complete %></td>
+                                    <td><%= u.most_recent_device %></td>
+                                    <td><%= u.unique_games_played %></td>
+                                    <td><%= u.game_sessions %></td>
+                                    <td><%= ((u.time_spent_playing.to_f/60.to_f)/60.to_f).round(2) %></td>
+                                    <td><%= u.credits_per_minute.round(2) unless u.credits_per_minute.nil? %></td>
+                                    <td><%= u.visits_to_site %></td>
+                                    <td><%= u.most_recent_visit.strftime("%m/%d/%Y") unless u.most_recent_visit.nil? %></td>
+                                </tr>
+                            <% end %>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<% content_for :extra_js do %>
+
+ <script src="assets/chartjs/Chart.min.js"></script>
+ <script src="assets/datatables/jquery.dataTables.min.js"></script>
+ <script>
+    $('#userTable').DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+ </script>
+
+ <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Total Users", color: "#00a65a", data: @weekly_users.map{|w| w.total_users }}], chart_id: "totalUsers", labels: @weekly_users.map{|w| w.date.strftime("%m/%d/%Y") }} %>
+<% end %>

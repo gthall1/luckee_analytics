@@ -1,0 +1,156 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Luckee Weekly Data
+    <small>Weekly Aggregate Data</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Data</a></li>
+    <li class="active">Weekly</li>
+  </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+<%= render partial: "/common/dash_widget", :locals => {data: @total.arrivals, title: "Total Arrivals", icon: "fa-rocket" } %>
+
+<%= render partial: "/common/dash_widget", :locals => {data: @total.sign_ups, title: "New Users", icon: "fa-user", bg_color:"blue" } %>
+
+<%= render partial: "/common/dash_widget", :locals => {data: @total.active_users, title: "Active Users", icon: "fa-users", bg_color:"green" } %>
+
+<%= render partial: "/common/dash_widget", :locals => {data: @total.surveys, title: "Surveys Taken", icon: "fa-files-o", bg_color:"red" } %>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <p class="text-center">
+                            <strong>Weekly User Stats: Weeks of <%= @some_weeks.first.date.strftime("%m/%d/%Y") %> - <%= Time.now.beginning_of_week.strftime("%m/%d/%Y")%></strong>
+                        </p>
+                        <div class="chart">
+                            <!-- Sales Chart Canvas -->
+                            <canvas id="weeklyUsers" style="height: 180px;"></canvas>
+                        </div><!-- /.chart-responsive -->
+                    </div><!-- /.col -->
+
+                    <div class="col-md-4">
+                             <%= render partial: "/common/weekly_goals" %>
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- ./box-body --> 
+        </div>
+    </div>
+</div>
+   
+
+    <%= render partial: "/common/dash_widget", :locals => {data: @total.games_played, title: "Games Played", icon: "fa-gamepad" } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: (@total.time_spent_playing.to_f/60.to_f/60.to_f).round(2), title: "Hours Played", icon: "fa-clock-o"  } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: @total.credits_earned, title: "Credits Earned", icon: "fa-certificate" } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: @total.cash_outs,title:"Cash Outs",icon: "fa-dollar" } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: "$#{@total.cash_payed_out}",title:"Cash Paid Out", icon: "fa-money" } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: @total.credits_per_minute.round(2),title:"Credits Per Min", icon: "fa-hourglass-start" } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: @total.desktop_arrivals,title:"Desktop Arrivals", icon: "fa-desktop" } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: @total.mobile_arrivals,title:"Mobile Arrivals", icon: "fa-mobile" } %>
+
+
+
+    <br style='clear: both' />
+
+
+</section><!-- /.content -->
+<!-- <WeeklyDatum id: 106, 
+date: "2016-02-01 00:00:00", 
+arrivals: 445, 
+sign_ups: 31, 
+cash_outs: 5, 
+surveys: 35, 
+games_played: 3237, 
+credits_earned: 16260,
+ cash_payed_out: 70,
+  time_spent_playing: 267607, 
+  mobile_arrivals: 279, 
+  desktop_arrivals: 166, 
+  unique_users: 71, 
+  credits_per_minute: 3.64564454591995,
+   cost_per_minute: nil, 
+   created_at: "2016-02-05 22:02:58", 
+   updated_at: "2016-02-05 22:02:58", 
+   active_users: 71, 
+   user_churn: 42> -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Weekly Metrics Table</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <table id="weeklyTable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Week Starting</th>
+                                <th>Arrivals</th>
+                                <th>New Users</th>
+                                <th>Active Users</th>
+                                <th>User Churn</th>
+                                <th>Cash outs</th>
+                                <th>Surveys</th>
+                                <th>Games Played</th>
+                                <th>Time Spent Playing</th>
+                                <th>Mobile Arrivals</th>
+                                <th>Desktop Arrivals</th>
+                                <th>Credits Per Minute</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% @all_weeks.each do | w | %>
+                                <tr>
+                                    <td><%= w.date.strftime("%m/%d/%Y") %></td>
+                                    <td><%= w.arrivals %></td>
+                                    <td><%= w.sign_ups %></td>
+                                    <td><%= w.active_users %></td>
+                                    <td><%= w.user_churn %></td>
+                                    <td><%= w.cash_outs %></td>
+                                    <td><%= w.surveys %></td>
+                                    <td><%= w.games_played %></td>
+                                    <td><%= ((w.time_spent_playing.to_f/60.to_f)/60.to_f).round(2) %> hrs</td>
+                                    <td><%= w.mobile_arrivals %></td>
+                                    <td><%= w.desktop_arrivals%></td>
+                                    <td><%= w.credits_per_minute.round(2) %></td>
+                                </tr>
+                            <% end %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<% content_for :extra_js do %>
+
+ <script src="assets/chartjs/Chart.min.js"></script>
+ <script src="assets/datatables/jquery.dataTables.min.js"></script>
+ <script>
+    $('#weeklyTable').DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": false,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false
+    });
+ </script>
+
+ <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Sign Ups", color: "#00a65a", data: @some_weeks.map{|w| w.sign_ups}},{name: "Active Users", color: "#337ab7", data: @some_weeks.map{|w| w.active_users}},{name: "Surveys Taken", color: "#dd4b39", data: @some_weeks.map{|w| w.surveys}}], chart_id: "weeklyUsers", labels: @some_weeks.map{|w| w.date.strftime("%m/%d/%Y")}} %>
+<% end %>

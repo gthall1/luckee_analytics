@@ -1,0 +1,9 @@
+<div class="col-md-12">
+    <p class="text-center">
+        <strong>Weekly Goals</strong>
+    </p>
+    <%= render partial: "/common/goal", :locals => {name: "New Users (25% of total growth)", actual: @total.sign_ups, goal: @weekly_user_goal, complete: ((@total.sign_ups.to_f/@weekly_user_goal.to_f) * 100).round(2), color:"blue" } %>
+
+    <%= render partial: "/common/goal", :locals => {name: "Active Users (50% of total)", actual: @total.active_users, goal: @weekly_active_user_goal, complete: ((@total.active_users.to_f/@weekly_active_user_goal.to_f) * 100).round(2), color:"green" } %> 
+      
+</div><!-- /.col -->

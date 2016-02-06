@@ -1,0 +1,37 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Luckee Totals
+    <small>Overall Aggregate Data</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+    <li class="active">Here</li>
+  </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <%= render partial: "/common/main_goals" %>
+    
+    <%= render partial: "/common/dash_widget", :locals => {data: @total.users, title: "Total Users", icon: "fa-users" } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: @total.surveys, title: "Surveys Taken", icon: "fa-files-o" } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: @total.arrivals, title: "Total Arrivals", icon: "fa-rocket" } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: @total.cash_outs,title:"Cash Outs",icon: "fa-dollar" } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: "$#{@total.cash_payed_out}",title:"Cash Paid Out", icon: "fa-money" } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: @total.games_per_arrival.round(2),title:"Avg. Games/Arrival", icon: "fa-industry" } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: "#{(@total.avg_time_per_arrival.to_f/60).round(2)} mins",title:"Avg. Time/Arrival", icon: "fa-hourglass-half" } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: @total.desktop_arrivals,title:"Desktop Arrivals", icon: "fa-desktop" } %>
+
+    <%= render partial: "/common/dash_widget", :locals => {data: @total.mobile_arrivals,title:"Mobile Arrivals", icon: "fa-mobile" } %>
+
+    <br style='clear: both' />
+
+</section><!-- /.content -->

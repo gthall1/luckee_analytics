@@ -1,0 +1,139 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    Luckee Game Data
+    <small>A little info about our games!</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Data</a></li>
+    <li class="active">Games</li>
+  </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+<%= render partial: "/common/dash_widget", :locals => {data: @total.games_played, title: "Total Games Played", icon: "fa-gamepad", bg_color:"blue" } %>
+
+<%= render partial: "/common/dash_widget", :locals => {data: (@total.time_spent_playing.to_f/60.to_f/60.to_f).round(2), title: "Hours Played", icon: "fa-clock-o"  } %>
+
+<%= render partial: "/common/dash_widget", :locals => {data: @total.credits_earned, title: "Credits Earned", icon: "fa-certificate" , bg_color: "green"} %>
+
+  <%= render partial: "/common/dash_widget", :locals => {data: @total.credits_per_minute.round(2),title:"Credits Per Min", icon: "fa-hourglass-start", bg_color:"blue" } %>
+  
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="text-center">
+                            <strong>Games Played: <%= @weekly_games.first.date.strftime("%m/%d/%Y") %> - <%= Time.now.strftime("%m/%d/%Y")%></strong>
+                        </p>
+                        <div class="chart">
+                            <!-- Sales Chart Canvas -->
+                            <canvas id="weeklyGames" style="height: 180px;"></canvas>
+                        </div><!-- /.chart-responsive -->
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- ./box-body --> 
+        </div>
+    </div>
+</div>
+   
+<div class="row">
+    <div class="col-md-12">   
+          <!-- DONUT CHART -->
+          <div class="box box-danger">
+            <div class="box-header with-border">
+              <h3 class="box-title">Games Chart</h3>
+              <div class="box-tools pull-right">
+                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+              </div>
+            </div>
+            <div class="box-body">
+                <canvas id="gameChart" style="height:250px"></canvas>
+            </div><!-- /.box-body -->
+          </div><!-- /.box -->
+    </div>
+
+</div>
+
+
+    <br style='clear: both' />
+
+
+</section><!-- /.content -->
+
+
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Last 500 Game Sessions</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <table id="userTable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Started</th>
+                                <th>Game Name</th>
+                                <th>Credits Earned</th>
+                                <th>Minutes Played</th>
+                                <th>User</th>
+                                <th>Score</th>
+                                <th>Active</th>
+                                <th>Browser</th>
+                                <th>Platform</th>
+                                <th>Credits Per Minute</th>
+                                <th>Version</th>
+                            </tr>
+                        </thead>
+
+<!-- #<GameSession id: 49516, game_id: 8, user_id: 383, credits_earned: 16, score: 117, active: false, arrival_id: 5843, browser: "Safari", landing_page: nil, referer: nil, platform: "iPhone", user_name: "fletcherfair", game_name: nil, user_provider: nil, time_played: 103, credits_per_minute: 9.32038834951456, cost_per_minute: nil, user_created: "2016-02-04 01:26:38", game_session_created: "2016-02-05 15:56:07", game_session_updated: "2016-02-05 15:57:51", created_at: "2016-02-05 16:00:01", updated_at: "2016-02-06 01:08:06", version: nil> -->
+                        <tbody>
+                            <% @game_sessions.each do | g | %>
+                                <tr>
+                                    <td><%= g.game_session_created.strftime("%m/%d/%Y") %></td>
+                                    <td><%= g.game.name %></td>
+                                    <td><%= g.credits_earned %></td>
+                                    <td><%= (g.time_played.to_f/60.to_f).round(2) %></td>
+                                    <td><%= link_to g.user.name, user_path(g.user.id)%></td>
+                                    <td><%= g.score %></td>
+                                    <td><%= g.active %></td>
+                                    <td><%= g.arrival.browser  if !g.arrival.nil? %></td>
+                                    <td><%= g.arrival.platform if !g.arrival.nil? %></td>
+                                    <td><%= g.credits_per_minute.round(2) if !g.credits_per_minute.nil? %></td>
+                                    <td><%= g.version %></td>
+                                </tr>
+                            <% end %>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<% content_for :extra_js do %>
+
+ <script src="assets/chartjs/Chart.min.js"></script>
+ <script src="assets/datatables/jquery.dataTables.min.js"></script>
+ <script>
+    $('#userTable').DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+ </script>
+  <%= render partial: "/common/piechartjs", :locals => {:dataset => @pie_data, :chart_id => "gameChart"} %>
+
+ <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Total Users", color: "#00a65a", data: @weekly_games.map{|w| w.games_played }}], chart_id: "weeklyGames", labels: @weekly_games.map{|w| w.date.strftime("%m/%d/%Y") }} %>
+<% end %>

@@ -1,0 +1,68 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    <%= @game.name %>
+    <small>Whats in a game?</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Data</a></li>
+    <li class="active">Games</li>
+  </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+<%= render partial: "/common/dash_widget", :locals => {data: @user.visits_to_site, title: "Total Visits", icon: "fa-rocket", bg_color:"blue" } %>
+
+<%= render partial: "/common/dash_widget", :locals => {data: @user.current_credits, title: "Current Credits", icon: "fa-certificate" } %>
+
+<%= render partial: "/common/dash_widget", :locals => {data: @user.cash_outs,title:"Cash Outs",icon: "fa-dollar",bg_color:"green" } %>
+
+<%= render partial: "/common/dash_widget", :locals => {data: "$#{@user.cash_out_value}",title:"Cash Paid Out", icon: "fa-money",bg_color:"green" } %>
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p class="text-center">
+                            <strong>User Visit History: <%= @user.user_created.strftime("%m/%d/%Y") %> - <%= Time.now.strftime("%m/%d/%Y")%></strong>
+                        </p>
+                        <div class="chart">
+                            <!-- Sales Chart Canvas -->
+                            <canvas id="totalVisits" style="height: 180px;"></canvas>
+                        </div><!-- /.chart-responsive -->
+                    </div><!-- /.col -->
+
+                </div><!-- /.row -->
+            </div><!-- ./box-body --> 
+        </div>
+    </div>
+</div>
+<%= render partial: "/common/dash_widget", :locals => {data: @user.game_sessions, title: "Games Played", icon: "fa-gamepad" } %>
+            
+<%= render partial: "/common/dash_widget", :locals => {data: @user.credits_per_game.round(2),title:"Credits Per Game", icon: "fa-industry" } %>
+<%= render partial: "/common/dash_widget", :locals => {data: @user.unique_games_played,title:"Unique Games Played", icon: "fa-futbol-o" } %>
+
+<%= render partial: "/common/dash_widget", :locals => {data: @user.lifetime_credits, title: "Lifetime Credits", icon: "fa-plus" } %>
+<%= render partial: "/common/dash_widget", :locals => {data: (@user.time_spent_playing.to_f/60.to_f/60.to_f).round(2), title: "Hours Played", icon: "fa-clock-o"  } %>
+<%= render partial: "/common/dash_widget", :locals => {data: @user.credits_per_minute.round(2),title:"Credits Per Min", icon: "fa-hourglass-start" } %>
+
+<%= render partial: "/common/dash_widget", :locals => {data: @user.surveys_complete, title: "Surveys Taken", icon: "fa-files-o", bg_color:"red" } %>
+
+
+
+<br style='clear: both' />
+
+
+</section><!-- /.content -->
+
+<% content_for :extra_js do %>
+
+ <script src="/assets/chartjs/Chart.min.js"></script>
+     <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Total Visits", color: "#00a65a", data: @arrivals.group("DATE_TRUNC('week', arrival_created)").count.sort.map{|u| u[1] }}], chart_id: "totalVisits", labels: @arrivals.group("DATE_TRUNC('week', arrival_created)").count.sort.map{|u| u[0].strftime("%m/%d/%Y")}} %>
+<% end %>

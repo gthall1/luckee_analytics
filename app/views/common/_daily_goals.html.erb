@@ -1,0 +1,11 @@
+<div class="col-md-12">
+    <p class="text-center">
+        <strong>Goals</strong>
+    </p>
+    <%= render partial: "/common/goal", :locals => {name: "Total Users", actual: @total.users, goal: 1000, complete: ((@total.users.to_f/1000.to_f) * 100).round(2), color:"blue" } %>
+
+   <%= render partial: "/common/goal", :locals => {name: "Games Played", actual: @total.games_played, goal: 100000, complete: ((@total.games_played.to_f/100000.to_f) * 100).round(2), color:"green" } %>    
+
+    <%= render partial: "/common/goal", :locals => {name: "Surveys Taken", actual: @total.surveys, goal: Survey.all.size * @total.users, complete: (@total.surveys.to_f/(Survey.all.size * @total.users.to_f) * 100).round(2), color:"red" } %> 
+      
+</div><!-- /.col -->

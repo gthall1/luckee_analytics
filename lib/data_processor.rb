@@ -12,7 +12,7 @@
 #TYLER 
 #93 itstcone
 
-LUCKEE_USER_IDS = [179,129,6,199,112,111,16,93]
+LUCKEE_USER_IDS = [179,129,6,199,112,111,16,93,94]
 
 module DataProcessor
     def process_game_sessions(game_sessions)
@@ -213,6 +213,8 @@ module DataProcessor
             if !user_arrivals.blank?
                 u.visits_to_site = user_arrivals.size
                 u.most_recent_device = user_arrivals.last.platform
+                u.most_recent_visit = user_arrivals.last.arrival_created
+                u.visits_this_month = user_arrivals.where(:arrival_created => Time.now.beginning_of_month..Time.now).size
             end
 
             if !u.arrival_id.blank?
@@ -257,7 +259,7 @@ module DataProcessor
 
             if !surveys.blank?
                 u.surveys_complete = surveys.size
-                u.credits_from_surveys = surveys.map{|s| Survey.where(survey_id:s.survey_id).first.credits }.sum
+                u.credits_from_surveys = surveys.map{|s| Survey.where(id:s.survey_id).first.credits }.sum
             end
 
             u.save
@@ -427,11 +429,19 @@ module DataProcessor
                                             time = 0 if time > 2000 #just too long, lets say somehting bugged
                                             time.to_i
                                         }.sum
+
+            dau =  arrivals.where.not(user_id:nil).map{|a| a.user_id }.uniq
+            
+            prev_dau = Arrival.where.not(user_id:nil).where(:arrival_created =>(start_date-1.day).beginning_of_day..(start_date-1.day).end_of_day).map{|a| a.user_id }.uniq
+         
+
             DailyDatum.create({
                     date:start_date,
                     arrivals: arrivals.size, 
                     sign_ups: User.where(:user_created => start_date..end_of_day).size, 
                     cash_outs: cash_outs.size, 
+                    active_users: dau.size,
+                    user_churn: (prev_dau - dau).size,
                     surveys: UserSurvey.where(:survey_completed_at =>start_date..end_of_day).size, 
                     games_played: game_sessions.size, 
                     credits_earned: credits_earned, 
@@ -476,12 +486,74 @@ module DataProcessor
                                             time = 0 if time > 2000 #just too long, lets say somehting bugged
                                             time.to_i
                                         }.sum
+            wau =  arrivals.where.not(user_id:nil).map{|a| a.user_id }.uniq
+            
+            prev_wau = Arrival.where.not(user_id:nil).where(:arrival_created =>(start_week-1.week).beginning_of_week..(start_week-1.week).end_of_week).map{|a| a.user_id }.uniq
+            
             WeeklyDatum.create({
                     date:start_week,
                     arrivals: arrivals.size, 
                     sign_ups: User.where(:user_created => start_week..end_of_week).size, 
                     cash_outs: cash_outs.size, 
+                    active_users: wau.size,
+                    user_churn: (prev_wau - wau).size,
                     surveys: UserSurvey.where(:survey_completed_at =>start_week..end_of_week).size, 
+                    games_played: game_sessions.size, 
+                    credits_earned: credits_earned, 
+                    cash_payed_out: cash_outs.map{|co| co.cash }.sum, 
+                    time_spent_playing: time_spent_playing, 
+                    mobile_arrivals: arrivals.where(mobile:1).size, 
+                    desktop_arrivals: arrivals.where(mobile:0).size, 
+                    unique_users: arrivals.map{|a| a.user_id }.uniq.size, 
+                    credits_per_minute: credits_earned.to_f/(time_spent_playing.to_f/60.to_f),
+                    total_users: User.where(:user_created => User.first.user_created..end_of_week).size
+                })
+
+
+            start_week = (start_week + 1.week).beginning_of_week
+            end_of_week = start_week.end_of_week 
+        end
+    end 
+
+    def aggregate_monthly_data
+
+        start_month = User.first.user_created.beginning_of_month
+        end_of_month = start_month.end_of_month
+
+        if MonthlyDatum.all.size > 0
+            #go back a month just to make sure we got everything
+            start_month = (MonthlyDatum.last.date-1.month).beginning_of_month
+            end_of_month = start_month.end_of_month  
+            a = MonthlyDatum.where(:date => start_month..Time.now)
+            a.destroy_all
+        end
+
+        loop do 
+            break if start_month > Time.now
+            p "Loading data for #{start_month}"
+            game_sessions = GameSession.where(:game_session_created =>start_month..end_of_month)
+            cash_outs = CashOut.where(:cash_out_date =>start_month..end_of_month)
+            arrivals = Arrival.where(:arrival_created =>start_month..end_of_month)
+
+            credits_earned = game_sessions.map{|ga| ga.credits_earned }.sum
+            #Time spent is in seconds
+            time_spent_playing = game_sessions.map{|ga| 
+                                            time = ga.game_session_updated - ga.game_session_created  
+                                            time = 0 if time > 2000 #just too long, lets say somehting bugged
+                                            time.to_i
+                                        }.sum
+            mau =  arrivals.where.not(user_id:nil).map{|a| a.user_id }.uniq
+            
+            prev_mau = Arrival.where.not(user_id:nil).where(:arrival_created =>(start_month-1.month).beginning_of_month..(start_month-1.month).end_of_month).map{|a| a.user_id }.uniq
+            
+            MonthlyDatum.create({
+                    date:start_month,
+                    arrivals: arrivals.size, 
+                    sign_ups: User.where(:user_created => start_month..end_of_month).size, 
+                    cash_outs: cash_outs.size, 
+                    active_users: mau.size,
+                    user_churn: (prev_mau - mau).size,
+                    surveys: UserSurvey.where(:survey_completed_at =>start_month..end_of_month).size, 
                     games_played: game_sessions.size, 
                     credits_earned: credits_earned, 
                     cash_payed_out: cash_outs.map{|co| co.cash }.sum, 
@@ -493,10 +565,10 @@ module DataProcessor
                 })
 
 
-            start_week = (start_week + 1.week).beginning_of_week
-            end_of_week = start_week.end_of_week 
+            start_month = (start_month + 1.month).beginning_of_month
+            end_of_month = start_month.end_of_month 
         end
-    end 
+    end
 
     def aggregate_total_data
 

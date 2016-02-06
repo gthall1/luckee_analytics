@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160204043136) do
+ActiveRecord::Schema.define(version: 20160206011849) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -80,6 +80,8 @@ ActiveRecord::Schema.define(version: 20160204043136) do
     t.float    "cost_per_minute"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "active_users"
+    t.integer  "user_churn"
   end
 
   create_table "game_sessions", force: true do |t|
@@ -125,6 +127,27 @@ ActiveRecord::Schema.define(version: 20160204043136) do
     t.float    "cost_per_minute"
     t.float    "avg_score"
     t.integer  "total_users_who_played"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "monthly_data", force: true do |t|
+    t.datetime "date"
+    t.integer  "active_users"
+    t.integer  "user_churn"
+    t.integer  "arrivals"
+    t.integer  "sign_ups"
+    t.integer  "cash_outs"
+    t.integer  "surveys"
+    t.integer  "games_played"
+    t.integer  "credits_earned"
+    t.integer  "cash_payed_out"
+    t.integer  "time_spent_playing"
+    t.integer  "mobile_arrivals"
+    t.integer  "desktop_arrivals"
+    t.integer  "unique_users"
+    t.float    "credits_per_minute"
+    t.float    "cost_per_minute"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -207,6 +230,8 @@ ActiveRecord::Schema.define(version: 20160204043136) do
     t.float    "cost_per_game"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "most_recent_visit"
+    t.integer  "visits_this_month"
   end
 
   create_table "weekly_data", force: true do |t|
@@ -226,6 +251,9 @@ ActiveRecord::Schema.define(version: 20160204043136) do
     t.float    "cost_per_minute"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "active_users"
+    t.integer  "user_churn"
+    t.integer  "total_users"
   end
 
 end

@@ -6,5 +6,8 @@ development:
   host: localhost
 
 production:
-  url:  <%= ENV["DATABASE_URL"] %>
-  pool: <%= ENV["DB_POOL"] || ENV['MAX_THREADS'] || 1 %>
+  adapter: postgresql
+  encoding: unicode
+  database: luckee_reports
+  pool: 5
+  host: localhost

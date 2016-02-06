@@ -104,7 +104,6 @@
 </section><!-- /.content -->
 
 <% content_for :extra_js do %>
- <script src="/assets/datatables/jquery.dataTables.min.js"></script>
  <script>
     $('#gameTable').DataTable({
       "paging": true,
@@ -115,7 +114,6 @@
       "autoWidth": true
     });
  </script>
- <script src="/assets/chartjs/Chart.min.js"></script>
      <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Games Played", color: "#00a65a", data: @game_sessions.group("DATE_TRUNC('week', game_session_created)").count.sort.map{|u| u[1] }}], chart_id: "totalVisits", labels: @game_sessions.group("DATE_TRUNC('week', game_session_created)").count.sort.map{|u| u[0].strftime("%m/%d/%Y")}} %>
 
 <% end %>

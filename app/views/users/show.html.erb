@@ -80,8 +80,6 @@
 </section><!-- /.content -->
 
 <% content_for :extra_js do %>
-
- <script src="/assets/chartjs/Chart.min.js"></script>
   <%= render partial: "/common/piechartjs", :locals => {:dataset => @pie_data, :chart_id => "gameChart"} %>
      <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Total Visits", color: "#00a65a", data: @arrivals.group("DATE_TRUNC('week', arrival_created)").count.sort.map{|u| u[1] }}], chart_id: "totalVisits", labels: @arrivals.group("DATE_TRUNC('week', arrival_created)").count.sort.map{|u| u[0].strftime("%m/%d/%Y")}} %>
 <% end %>

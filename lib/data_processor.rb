@@ -99,6 +99,7 @@ module DataProcessor
                 cash: c["cash"],
                 cash_out_date: c["created_at"],
                 cash_out_type: c["cashout_type"] == 0 ? "Venmo" : "Paypal" ,
+                cashout_username: c["paypal"].blank? ? c["venmo"] : c["paypal"] ,
                 arrival_id:c["arrival_id"],
                 credits_spent: c["credits"]
             })

@@ -4,12 +4,15 @@ class StaticPagesController < ApplicationController
         @active = "main"
         @total = TotalDatum.first
         @latest_users = User.order("user_created desc").limit(7)
+        @recent_cash_outs = CashOut.order('cash_out_date desc').limit(7)
     end
 
     def daily
         @total = DailyDatum.last
         @all_days = DailyDatum.all.order('date desc')
         @some_days = DailyDatum.where(:date => (Time.now - 2.weeks).beginning_of_day..Time.now).order('date asc')
+        #@power_users = GameSession.select(:user_id,:time_played).where(:game_session_created => Time.now.beginning_of_day..Time.now.end_of_day).group(:user_id).order("time_played desc").limit(10)
+        @power_users = GameSession.select('user_id, count(*)').where(:game_session_created => Time.now.beginning_of_day..Time.now.end_of_day).group(:user_id).limit(10)
     end
 
     def weekly

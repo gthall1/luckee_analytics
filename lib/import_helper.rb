@@ -85,10 +85,16 @@ module ImportHelper
     def get_last_for_type(slug)
         case slug
             when "gs"
+                #game can be updated with more score/credit data, so try and nix ones that could be out of dates
+                stale_games = GameSession.where(:game_session_created => Time.now-3.days..Time.now)
+                stale_games.destroy_all                
                 return GameSession.last.id unless GameSession.last.blank?
             when "u"
                 return User.last.id unless User.last.blank?
             when "a"
+                #arrivals can be updated with user id so delete ones that may not have bene at time of pull
+                stale_arrivals = Arrival.where(:arrival_created => Time.now-1.day..Time.now)
+                stale_arrivals.destroy_all
                 return Arrival.last.id unless Arrival.last.blank?
             when "co"
                 return CashOut.last.id unless CashOut.last.blank?

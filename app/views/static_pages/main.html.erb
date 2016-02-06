@@ -11,7 +11,7 @@
 </section>
  <%= render partial: "/common/dash_widget", :locals => {data: @total.surveys, title: "Surveys Taken", icon: "fa-files-o",bg_color:"red" } %>
 
- <%= render partial: "/common/dash_widget", :locals => {data: @total.arrivals, title: "Total Arrivals", icon: "fa-rocket" } %>
+ <%= render partial: "/common/dash_widget", :locals => {data: number_with_delimiter(@total.arrivals, :delimiter => ','), title: "Total Arrivals", icon: "fa-rocket" } %>
 
 
  <%= render partial: "/common/dash_widget", :locals => {data: "$#{@total.cash_payed_out}",title:"Cash Paid Out", icon: "fa-money",bg_color:"green" } %>
@@ -61,6 +61,7 @@
         </div><!-- /.box-footer -->
       </div><!-- /.box -->
   </div>
+        <% if false %>
       <div class="col-md-6">
         <div class="box">
             <div class='box-body'>
@@ -68,6 +69,48 @@
             </div>
         </div>
       </div>
+      <% end %>
+      <div class="col-md-6">
+      <div class="box box-info">
+        <div class="box-header with-border">
+          <h3 class="box-title">Recent Cash Outs</h3>
+          <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          </div>
+        </div><!-- /.box-header -->
+
+        <div class="box-body">
+          <div class="table-responsive">
+            <table class="table no-margin">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>User</th>
+                  <th>Type</th>
+                  <th>Venmo/Paypal Name</th>
+                  <th>Cashout Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @recent_cash_outs.each do | c | %>
+                <tr>
+                  <td><%= c.cash_out_date.strftime("%m/%d/%Y") %> </td>
+                  <td><%= link_to c.user.name, user_path(c.user.id) %></td>
+                  <td><%= c.cash_out_type %></td>
+                  <td><%= c.cashout_username %></td>
+                  <td><%= c.cash %></td>
+                </tr>
+               <% end %>
+              </tbody>
+            </table>
+          </div><!-- /.table-responsive -->
+        </div><!-- /.box-body -->
+        <div class="box-footer clearfix">
+            <%= link_to "View All Users", users_path,:class=> "btn btn-sm btn-default btn-flat pull-right" %>
+        </div><!-- /.box-footer -->
+      </div><!-- /.box -->
+  </div>  
     </div><!-- /.col -->
     
 
@@ -77,9 +120,9 @@
 
     <%= render partial: "/common/dash_widget", :locals => {data: @total.games_per_arrival.round(2),title:"Avg. Games/Arrival", icon: "fa-industry" } %>
 
-    <%= render partial: "/common/dash_widget", :locals => {data: @total.desktop_arrivals,title:"Desktop Arrivals", icon: "fa-desktop" } %>
+    <%= render partial: "/common/dash_widget", :locals => {data: number_with_delimiter(@total.desktop_arrivals, :delimiter => ','),title:"Desktop Arrivals", icon: "fa-desktop" } %>
 
-    <%= render partial: "/common/dash_widget", :locals => {data: @total.mobile_arrivals,title:"Mobile Arrivals", icon: "fa-mobile" } %>
+    <%= render partial: "/common/dash_widget", :locals => {data: number_with_delimiter(@total.mobile_arrivals, :delimiter => ','),title:"Mobile Arrivals", icon: "fa-mobile" } %>
 
     <br style='clear: both' />
 

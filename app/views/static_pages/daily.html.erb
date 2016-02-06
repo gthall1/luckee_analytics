@@ -66,9 +66,53 @@
 
 
 
-    <br style='clear: both' />
+<br style='clear: both' />
+<!-- Main content -->
+<section class="content">
+    <!-- TABLE: LATEST ORDERS -->
+    <div class='row'>
+     <div class="col-md-6">
+      <div class="box box-info">
+        <div class="box-header with-border">
+          <h3 class="box-title">Most Active Today</h3>
+          <div class="box-tools pull-right">
+            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          </div>
+        </div><!-- /.box-header -->
 
+        <div class="box-body">
+          <div class="table-responsive">
+            <table class="table no-margin">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Platform</th>
+                  <th>Mins Played<th>
+                  <th>Games Played<th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @power_users.each do | g | %>
+                <% games_today = GameSession.where(user_id:g.user_id,:game_session_created => Time.now.beginning_of_day..Time.now.end_of_day) %>
+                <tr>
+                  <td><%= link_to g.user.name, user_path(g.user.id) %></td>
+                  <td><%= games_today.first.arrival.platform %></td>
+                  <td><%= (games_today.sum(:time_played).to_f/60.to_f).round(2) %></td>
+                  <td><%= games_today.size %></td>
+                </tr>
+               <% end %>
+              </tbody>
+            </table>
+          </div><!-- /.table-responsive -->
+        </div><!-- /.box-body -->
+        <div class="box-footer clearfix">
+            <%= link_to "View All Users", users_path,:class=> "btn btn-sm btn-default btn-flat pull-right" %>
+        </div><!-- /.box-footer -->
+      </div><!-- /.box -->
+  </div>
 
+</div>
 </section><!-- /.content -->
 <section class="content">
     <div class="row">

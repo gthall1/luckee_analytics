@@ -19,7 +19,10 @@ module LuckeeMetrics
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
    #  config.assets.precompile += ["*external/calendars*"]
-   config.assets.precompile += ['skins/*', 'directory2/*', 'file.js']
+  config.assets.paths << File.join(Rails.root, '/vendor/stylesheets/skins/*')
+   config.assets.precompile += ['skins/*']
+
+
     # config.i18n.default_locale = :de
         config.before_configuration do
           env_file = File.join(Rails.root, 'config', 'local_env.yml')

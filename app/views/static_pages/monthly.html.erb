@@ -132,5 +132,5 @@
     });
  </script>
 
- <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Sign Ups", color: "#00a65a", data: @some_months.map{|m| m.sign_ups}},{name: "Active Users", color: "#337ab7", data: @some_months.map{|m| m.active_users}}], chart_id: "monthlyUsers", labels: @some_months.map{|m| m.date.strftime("%m/%d/%Y")}} %>
+ <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Sign Ups", color: "#337ab7", data: @some_months.map{|m| m.sign_ups}},{name: "Active Users", color: "#00a65a", data: @some_months.map{|m| m.active_users}}], chart_id: "monthlyUsers", labels: @some_months.map{|m| m.date.strftime("%m/%d/%Y")}} %>
 <% end %>

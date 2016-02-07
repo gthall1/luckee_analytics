@@ -240,8 +240,8 @@ module DataProcessor
                 u.unique_games_played = game_sessions.map{|g| g.game_id}.uniq.size
                 if !u.lifetime_credits.blank? && u.time_spent_playing > 0 
                    
-                    u.credits_per_minute = u.lifetime_credits.to_f/(u.time_spent_playing.to_f/60.to_f)
-                    u.credits_per_game = u.lifetime_credits.to_f/game_sessions.size.to_f
+                    u.credits_per_minute = u.credits_from_games.to_f/(u.time_spent_playing.to_f/60.to_f)
+                    u.credits_per_game = u.credits_from_games.to_f/game_sessions.size.to_f
                 end
 
             end 

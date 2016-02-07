@@ -98,7 +98,7 @@
                 <tr>
                   <td><%= link_to g.user.name, user_path(g.user.id) %></td>
                   <td><%= games_today.first.arrival.platform %></td>
-                  <td><%= (games_today.sum(:time_played).to_f/60.to_f).round(2) %></td>
+                  <td><%= (games_today.map{|g| g.time_played = g.time_played < 2000 ? g.time_played.to_f/60.to_f : 0 }.sum).round(2) %></td>
                   <td><%= games_today.size %></td>
                 </tr>
                <% end %>

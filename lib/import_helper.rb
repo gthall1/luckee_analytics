@@ -10,9 +10,10 @@ module ImportHelper
         process_loop({slug:"gs"})
     end
 
+    #always start at 1 to update stats
     def get_users(args={})
         p "Getting Users"
-        process_loop({slug:"u"})
+        process_loop({slug:"u",start_id:1})
     end
 
     def get_arrivals(args={})

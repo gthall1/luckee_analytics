@@ -20,8 +20,8 @@ class StaticPagesController < ApplicationController
         @all_weeks = WeeklyDatum.all.order('date desc')
         @active = "weekly"
         @total_users = User.all.size
-        @weekly_user_goal = (@total_users.to_f * 0.25).to_i #25 percent goal
-        @weekly_active_user_goal = (@total_users.to_f * 0.5).to_i
+        @weekly_user_goal = (@total_users.to_f * 0.1).to_i #10 percent goal
+        @weekly_active_user_goal = (@total_users.to_f * 0.25).to_i
         @total = WeeklyDatum.last
     end
 

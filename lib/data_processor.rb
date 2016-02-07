@@ -47,9 +47,9 @@ module DataProcessor
 
         users.each do | u |  
 
-            next if User.where(id:u["id"].to_i).present?
             next if LUCKEE_USER_IDS.include? u["id"]
             
+            if !User.where(id:u["id"].to_i).present?
             User.create({
                 id: u["id"],
                 name: u["name"],
@@ -62,6 +62,14 @@ module DataProcessor
                 provider: u["provider"],
                 cashed_out_credits: u["pending_credits"]
             })
+            else
+                User.find(u["id"]).update_attributes(
+                        name: u["name"],
+                        current_credits:  u["credits"],
+                        lifetime_credits: u["lifetime_credits"],
+                        cashed_out_credits: u["pending_credits"]
+                    )
+            end
         end
 
     end

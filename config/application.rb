@@ -21,6 +21,8 @@ module LuckeeMetrics
    #  config.assets.precompile += ["*external/calendars*"]
   #config.assets.paths << File.join(Rails.root, '/vendor/stylesheets/skins/*')
   # config.assets.precompile += ['skins/*']
+    config.time_zone = 'Eastern Time (US & Canada)'
+
     config.assets.precompile = ['*.js', '*.css']
 
     # config.i18n.default_locale = :de

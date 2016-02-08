@@ -19,6 +19,7 @@
 
 <%= render partial: "/common/dash_widget", :locals => {data: UserSurvey.group(:user_id).size.size, title: "Uniq-U Survey", icon: "fa-files-o",bg_color:"red" } %>
 
+<%= render partial: "/common/dash_widget", :locals => {data: WeeklyDatum.last.active_users, title: "WAU", icon: "fa-users", bg_color:"green" } %>
 
 <div class="row">
     <div class="col-md-12">
@@ -114,5 +115,5 @@
     });
  </script>
 
- <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Total Users", color: "#00a65a", data: @weekly_users.map{|w| w.total_users }}], chart_id: "totalUsers", labels: @weekly_users.map{|w| w.date.strftime("%m/%d/%Y") }} %>
+ <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Total Users", color: "#337ab7", data: @weekly_users.map{|w| w.total_users }},{name: "Active Users", color: "#00a65a", data: @weekly_users.map{|w| w.active_users }}], chart_id: "totalUsers", labels: @weekly_users.map{|w| w.date.strftime("%m/%d/%Y") }} %>
 <% end %>

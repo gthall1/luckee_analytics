@@ -84,6 +84,7 @@
                                 <th>Week Starting</th>
                                 <th>Arrivals</th>
                                 <th>New Users</th>
+                                <th>Total Users</th>
                                 <th>Active Users</th>
                                 <th>User Churn</th>
                                 <th>Cash outs</th>
@@ -101,6 +102,7 @@
                                     <td><%= w.date.strftime("%m/%d/%Y") %></td>
                                     <td><%= w.arrivals %></td>
                                     <td><%= w.sign_ups %></td>
+                                    <td><%= User.where(:user_created=>User.order('user_created asc').first.user_created..w.date.end_of_week).size %></td>
                                     <td><%= w.active_users %></td>
                                     <td><%= w.user_churn %></td>
                                     <td><%= w.cash_outs %></td>

@@ -77,20 +77,24 @@ module DataProcessor
     def process_arrivals(arrivals)
         return false if arrivals.blank? || arrivals.empty?
 
-        arrivals.each do | a |
-            next if Arrival.where(id:a["id"].to_i).present? 
+        arrivals.each do | a | 
             next if LUCKEE_USER_IDS.include? a["user_id"]
+            next if a["user_agent"] == 'Ruby'
 
-            Arrival.create({
-                id: a["id"],
-                landing_url: a["landing_url"],
-                user_id: a["user_id"].to_i,
-                mobile: a["mobile"].to_i,
-                referer: a["referer"],
-                ip: a["ip"],
-                user_agent: a["user_agent"],
-                arrival_created: a["created_at"]
-            })
+            if !Arrival.where(id:a["id"].to_i).present?
+                Arrival.create({
+                    id: a["id"],
+                    landing_url: a["landing_url"],
+                    user_id: a["user_id"].to_i,
+                    mobile: a["mobile"].to_i,
+                    referer: a["referer"],
+                    ip: a["ip"],
+                    user_agent: a["user_agent"],
+                    arrival_created: a["created_at"]
+                })
+            else
+                Arrival.find(a["id"]).update_attributes(user_id: a["user_id"].to_i)
+            end
         end
     end
 

@@ -12,6 +12,37 @@ task :import_data => :environment do |t,args|
     aggregate_data
 end
 
+task :repull_all_data => :environment do |t,args|
+
+    p "Wiping all data...#{Time.now}"
+    a = GameSession.all
+    a.destroy_all
+
+    a = User.all
+    a.destroy_all
+
+    a = Arrival.all
+    a.destroy_all
+
+    a = CashOut.all
+    a.destroy_all
+
+    a = UserSurvey.all
+    a.destroy_all
+
+    a = Survey.all
+    a.destroy_all
+
+    a = Game.all
+    a.destroy_all
+
+    p "Pulling New Data...#{Time.now}"
+    grab_data
+    denormalize_data
+    aggregate_data
+
+end
+
 def grab_data
      get_game_sessions
      get_users

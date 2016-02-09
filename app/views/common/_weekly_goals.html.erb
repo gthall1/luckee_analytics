@@ -4,6 +4,6 @@
     </p>
     <%= render partial: "/common/goal", :locals => {name: "New Users (10% of total)", actual: @total.sign_ups, goal: @weekly_user_goal, complete: ((@total.sign_ups.to_f/@weekly_user_goal.to_f) * 100).round(2), color:"blue" } %>
 
-    <%= render partial: "/common/goal", :locals => {name: "Active Users (25% of total)", actual: @total.active_users, goal: @weekly_active_user_goal, complete: ((@total.active_users.to_f/@weekly_active_user_goal.to_f) * 100).round(2), color:"green" } %> 
+    <%= render partial: "/common/goal", :locals => {name: "Active Users (10% more than last week)", actual: @total.active_users, goal: @weekly_active_user_goal, complete: ((@total.active_users.to_f/@weekly_active_user_goal.to_f) * 100).round(2), color:"green" } %> 
       
 </div><!-- /.col -->

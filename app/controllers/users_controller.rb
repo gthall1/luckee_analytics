@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
 
     def index
-        @users = User.all
-        @weekly_users = WeeklyDatum.select("date, total_users,active_users").where(:date => Time.now-18.weeks..Time.now) #for weekly growth chart
+        @users = User.all.order('user_created asc')
+        @weekly_users = WeeklyDatum.select("date, total_users,active_users").where(:date => Time.now-18.weeks..Time.now).order('date asc') #for weekly growth chart
     end
 
     def show

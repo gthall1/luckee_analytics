@@ -19,8 +19,10 @@
 
 <%= render partial: "/common/dash_widget", :locals => {data: UserSurvey.group(:user_id).size.size, title: "Uniq-U Survey", icon: "fa-files-o",bg_color:"red" } %>
 
+<%= render partial: "/common/dash_widget", :locals => {data:User.where(provider:"facebook").size, title: "Facebook Users", icon: " fa-facebook-square", bg_color:"blue" } %>
+<% if false %>
 <%= render partial: "/common/dash_widget", :locals => {data: WeeklyDatum.last.active_users, title: "WAU", icon: "fa-users", bg_color:"green" } %>
-
+<% end %>
 <div class="row">
     <div class="col-md-12">
         <div class="box">

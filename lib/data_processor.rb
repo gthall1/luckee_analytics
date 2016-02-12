@@ -23,6 +23,7 @@ module DataProcessor
             next if GameSession.where(id:g["id"].to_i).present?
             next if LUCKEE_USER_IDS.include? g["user_id"]
             next if g["score"] == 0 #eliminate sessions that really had no value
+            p "creating game session "
             GameSession.create({
                 id:g["id"].to_i,
                 user_id:g["user_id"].to_i,
@@ -31,8 +32,8 @@ module DataProcessor
                 active: g["active"] == "true",
                 game_session_created: g["created_at"],
                 game_session_updated: g["updated_at"],
+                last_score_date: g["last_score_update"],
                 score: g["score"],
-                credits_earned: g["credits_applied"],
                 arrival_id: g["arrival_id"],
                 version: g["version"]
             })
@@ -60,6 +61,7 @@ module DataProcessor
                 lifetime_credits: u["lifetime_credits"],
                 arrival_id: u["arrival_id"],
                 provider: u["provider"],
+                active: (u["created_at"] >= Time.now-1.month),
                 cashed_out_credits: u["pending_credits"]
             })
             else
@@ -67,7 +69,8 @@ module DataProcessor
                         name: u["name"],
                         current_credits:  u["credits"],
                         lifetime_credits: u["lifetime_credits"],
-                        cashed_out_credits: u["pending_credits"]
+                        cashed_out_credits: u["pending_credits"],
+                        active: Arrival.where(user_id:u["id"].to_i).where(arrival_created: Time.now-1.month..Time.now).present?
                     )
             end
         end
@@ -183,14 +186,23 @@ module DataProcessor
                 p "ERROR ON USER AGNET SUTFF #{e}" 
             end
             game_sessions = GameSession.where(arrival_id:a.id)
-            arrival.credits_earned = game_sessions.map{|ga| ga.credits_earned }.sum
-            arrival.games_played = game_sessions.size
-            arrival.time_played = game_sessions.map{|ga| 
-                time = ga.game_session_updated - ga.game_session_created  
-                time = 0 if time > 2000 #just too long, lets say somehting bugged
-                time.to_i
-            }.sum
-
+            if !game_sessions.blank?
+                arrival.credits_earned = game_sessions.map{|ga| ga.credits_earned }.sum
+                arrival.games_played = game_sessions.size
+                arrival.time_played = game_sessions.map{|ga| 
+                    if ga.game_session_updated.nil?
+                        0
+                    else
+                        time = ga.game_session_updated - ga.game_session_created  unless ga.game_session_updated.nil?
+                        time = 0 if time > 2000 #just too long, lets say somehting bugged
+                        time.to_i
+                    end
+                }.sum
+            else
+                arrival.credits_earned = 0
+                arrival.games_played = 0
+                arrival.time_played = 0               
+            end
             surveys_taken = UserSurvey.where(arrival_id:a.id)
 
             if !surveys_taken.blank? 
@@ -245,9 +257,13 @@ module DataProcessor
                 u.credits_from_games = game_sessions.map{|ga| ga.credits_earned }.sum
                 u.game_sessions = game_sessions.size
                 u.time_spent_playing = game_sessions.map{|ga| 
-                    time = ga.game_session_updated - ga.game_session_created  
-                    time = 0 if time > 2000 #just too long, lets say somehting bugged
-                    time.to_i
+                    if ga.game_session_updated.blank?
+                        0
+                    else
+                        time = ga.game_session_updated - ga.game_session_created  
+                        time = 0 if time > 2000 #just too long, lets say somehting bugged
+                        time.to_i
+                    end
                 }.sum
                 u.unique_games_played = game_sessions.map{|g| g.game_id}.uniq.size
                 if !u.lifetime_credits.blank? && u.time_spent_playing > 0 
@@ -300,7 +316,11 @@ module DataProcessor
                 gs.user_created = user.user_created
                 gs.user_provider = user.provider
             end
-            gs.time_played = gs.game_session_updated - gs.game_session_created
+            if gs.game_session_updated
+                gs.time_played = gs.game_session_updated - gs.game_session_created
+            else
+                gs.time_played = 0
+            end
             gs.credits_per_minute = gs.credits_earned/(gs.time_played.to_f/60.to_f)
 
             gs.save

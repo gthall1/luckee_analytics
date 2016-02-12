@@ -21,7 +21,8 @@ class StaticPagesController < ApplicationController
         @all_weeks = WeeklyDatum.all.order('date desc')
         @active = "weekly"
         @total_users = User.all.size
-        @weekly_user_goal = (@total_users.to_f * 0.1).to_i #10 percent goal
+        users_beginning_week = User.where(:user_created => User.first.user_created..Time.now.beginning_of_week).size
+        @weekly_user_goal = (users_beginning_week.to_f * 0.1).to_i #10 percent goal
         @weekly_active_user_goal = prev_week_active + (prev_week_active * 0.15).to_i
         @total = WeeklyDatum.last
 

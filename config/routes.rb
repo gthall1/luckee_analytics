@@ -10,6 +10,7 @@ LuckeeMetrics::Application.routes.draw do
   get 'daily' => 'static_pages#daily'
 
   get 'users' => 'users#index'
+  get 'active_users' => 'users#active', as: :active_user
   get 'users/:id' => 'users#show', as: :user
 
   get 'games' => 'games#index'

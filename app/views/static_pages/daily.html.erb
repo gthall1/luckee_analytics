@@ -1,13 +1,13 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
-  <h1>
-    Luckee Daily Data
-    <small>Widgets show data for current day.</small>
-  </h1>
-  <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-dashboard"></i> Data</a></li>
-    <li class="active">Daily</li>
-  </ol>
+    <h1>
+        Luckee Daily Data
+        <small>Widgets show data for current day.</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Data</a></li>
+        <li class="active">Daily</li>
+    </ol>
 </section>
 
 <!-- Main content -->
@@ -22,156 +22,155 @@
 <%= render partial: "/common/dash_widget", :locals => {data: @total.surveys, title: "Surveys Taken", icon: "fa-files-o", bg_color:"red" } %>
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="box">
-            <div class="box-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <p class="text-center">
-                            <strong>Daily User Stats: <%= @some_days.first.date.strftime("%m/%d/%Y") %> - <%= Time.now.beginning_of_day.strftime("%m/%d/%Y")%></strong>
-                        </p>
-                        <div class="chart">
-                            <!-- Sales Chart Canvas -->
-                            <canvas id="dailyUsers" style="height: 180px;"></canvas>
-                        </div><!-- /.chart-responsive -->
-                    </div><!-- /.col -->
-                    <% if false %>
-                        <div class="col-md-4">
-                                 <%= render partial: "/common/daily_goals" %>
-                        </div><!-- /.col -->
-                    <% end %>
-
-                </div><!-- /.row -->
-            </div><!-- ./box-body --> 
+        <div class="col-md-12">
+                <div class="box">
+                        <div class="box-body">
+                                <div class="row">
+                                        <div class="col-md-12">
+                                                <p class="text-center">
+                                                        <strong>Daily User Stats: <%= @some_days.first.date.strftime("%m/%d/%Y") %> - <%= Time.now.beginning_of_day.strftime("%m/%d/%Y")%></strong>
+                                                </p>
+                                                <div class="chart">
+                                                        <!-- Sales Chart Canvas -->
+                                                        <canvas id="dailyUsers" style="height: 180px;"></canvas>
+                                                </div><!-- /.chart-responsive -->
+                                        </div><!-- /.col -->
+                                        <% if false %>
+                                                <div class="col-md-4">
+                                                                 <%= render partial: "/common/daily_goals" %>
+                                                </div><!-- /.col -->
+                                        <% end %>
+                                </div><!-- /.row -->
+                        </div><!-- ./box-body --> 
+                </div>
         </div>
-    </div>
 </div>
-   
+     
 
-    <%= render partial: "/common/dash_widget", :locals => {data: @total.games_played, title: "Games Played", icon: "fa-gamepad" } %>
+        <%= render partial: "/common/dash_widget", :locals => {data: @total.games_played, title: "Games Played", icon: "fa-gamepad" } %>
 
-    <%= render partial: "/common/dash_widget", :locals => {data: (@total.time_spent_playing.to_f/60.to_f/60.to_f).round(2), title: "Hours Played", icon: "fa-clock-o"  } %>
+        <%= render partial: "/common/dash_widget", :locals => {data: (@total.time_spent_playing.to_f/60.to_f/60.to_f).round(2), title: "Hours Played", icon: "fa-clock-o"  } %>
 
-    <%= render partial: "/common/dash_widget", :locals => {data: @total.credits_earned, title: "Credits Earned", icon: "fa-certificate" } %>
+        <%= render partial: "/common/dash_widget", :locals => {data: @total.credits_earned, title: "Credits Earned", icon: "fa-certificate" } %>
 
-    <%= render partial: "/common/dash_widget", :locals => {data: @total.cash_outs,title:"Cash Outs",icon: "fa-dollar" } %>
+        <%= render partial: "/common/dash_widget", :locals => {data: @total.cash_outs,title:"Cash Outs",icon: "fa-dollar" } %>
 
-    <%= render partial: "/common/dash_widget", :locals => {data: "$#{@total.cash_payed_out}",title:"Cash Paid Out", icon: "fa-money" } %>
+        <%= render partial: "/common/dash_widget", :locals => {data: "$#{@total.cash_payed_out}",title:"Cash Paid Out", icon: "fa-money" } %>
 
-    <%= render partial: "/common/dash_widget", :locals => {data: @total.credits_per_minute.round(2),title:"Credits Per Min", icon: "fa-hourglass-start" } %>
+        <%= render partial: "/common/dash_widget", :locals => {data: @total.credits_per_minute.round(2),title:"Credits Per Min", icon: "fa-hourglass-start" } %>
 
-    <%= render partial: "/common/dash_widget", :locals => {data: @total.desktop_arrivals,title:"Desktop Arrivals", icon: "fa-desktop" } %>
+        <%= render partial: "/common/dash_widget", :locals => {data: @total.desktop_arrivals,title:"Desktop Arrivals", icon: "fa-desktop" } %>
 
-    <%= render partial: "/common/dash_widget", :locals => {data: @total.mobile_arrivals,title:"Mobile Arrivals", icon: "fa-mobile" } %>
+        <%= render partial: "/common/dash_widget", :locals => {data: @total.mobile_arrivals,title:"Mobile Arrivals", icon: "fa-mobile" } %>
 
 
 
 <br style='clear: both' />
 <!-- Main content -->
 <section class="content">
-    <!-- TABLE: LATEST ORDERS -->
-    <div class='row'>
-     <div class="col-md-6">
-      <div class="box box-info">
-        <div class="box-header with-border">
-          <h3 class="box-title">Most Active Today</h3>
-          <div class="box-tools pull-right">
-            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-          </div>
-        </div><!-- /.box-header -->
+        <!-- TABLE: LATEST ORDERS -->
+        <div class='row'>
+         <div class="col-md-6">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Most Active Today</h3>
+                    <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div><!-- /.box-header -->
 
-        <div class="box-body">
-          <div class="table-responsive">
-            <table class="table no-margin">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Platform</th>
-                  <th>Mins Played</th>
-                  <th>Games Played</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @power_users.each do | g | %>
-                <% games_today = GameSession.where(user_id:g.user_id,:game_session_created => Time.now.beginning_of_day..Time.now.end_of_day) %>
-                <tr>
-                  <td><%= link_to g.user.name, user_path(g.user.id) %></td>
-                  <td><%= games_today.first.arrival.platform %></td>
-                  <td><%= (games_today.map{|g| g.time_played = g.time_played < 2000 ? g.time_played.to_f/60.to_f : 0 }.sum).round(2) %></td>
-                  <td><%= games_today.size %></td>
-                </tr>
-               <% end %>
-              </tbody>
-            </table>
-          </div><!-- /.table-responsive -->
-        </div><!-- /.box-body -->
-        <div class="box-footer clearfix">
-            <%= link_to "View All Users", users_path,:class=> "btn btn-sm btn-default btn-flat pull-right" %>
-        </div><!-- /.box-footer -->
-      </div><!-- /.box -->
-  </div>
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table no-margin">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Platform</th>
+                                    <th>Mins Played</th>
+                                    <th>Games Played</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% @power_users.each do | g | %>
+                                <% games_today = GameSession.where(user_id:g.user_id,:game_session_created => Time.now.beginning_of_day..Time.now.end_of_day) %>
+                                <tr>
+                                    <td><%= link_to g.user.name, user_path(g.user.id) %></td>
+                                    <td><%= games_today.first.arrival.platform %></td>
+                                    <td><%= (games_today.map{|g| g.time_played = g.time_played < 2000 ? g.time_played.to_f/60.to_f : 0 }.sum).round(2) %></td>
+                                    <td><%= games_today.size %></td>
+                                </tr>
+                             <% end %>
+                            </tbody>
+                        </table>
+                    </div><!-- /.table-responsive -->
+                </div><!-- /.box-body -->
+                <div class="box-footer clearfix">
+                        <%= link_to "View All Users", users_path,:class=> "btn btn-sm btn-default btn-flat pull-right" %>
+                </div><!-- /.box-footer -->
+            </div><!-- /.box -->
+    </div>
 
 </div>
 </section><!-- /.content -->
 <section class="content">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">Daily Metrics Table</h3>
-                </div><!-- /.box-header -->
-                <div class="box-body">
-                    <table id="weeklyTable" class="table table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Arrivals</th>
-                                <th>New Users</th>
-                                <th>Active Users</th>
-                                <th>Cash outs</th>
-                                <th>Surveys</th>
-                                <th>Games Played</th>
-                                <th>Hours of Gaming</th>
-                                <th>Mobile Arrivals</th>
-                                <th>Desktop Arrivals</th>
-                                <th>Credits Per Minute</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% @all_days.each do | d | %>
-                                <tr>
-                                    <td><%= d.date.strftime("%m/%d/%Y") %></td>
-                                    <td><%= d.arrivals %></td>
-                                    <td><%= d.sign_ups %></td>
-                                    <td><%= d.active_users %></td>
-                                    <td><%= d.cash_outs %></td>
-                                    <td><%= d.surveys %></td>
-                                    <td><%= d.games_played %></td>
-                                    <td><%= ((d.time_spent_playing.to_f/60.to_f)/60.to_f).round(2) %> hrs</td>
-                                    <td><%= d.mobile_arrivals %></td>
-                                    <td><%= d.desktop_arrivals%></td>
-                                    <td><%= d.credits_per_minute.round(2) %></td>
-                                </tr>
-                            <% end %>
-                        </tbody>
-                    </table>
+        <div class="row">
+                <div class="col-xs-12">
+                        <div class="box">
+                                <div class="box-header">
+                                        <h3 class="box-title">Daily Metrics Table</h3>
+                                </div><!-- /.box-header -->
+                                <div class="box-body">
+                                        <table id="weeklyTable" class="table table-bordered table-hover">
+                                                <thead>
+                                                        <tr>
+                                                                <th>Date</th>
+                                                                <th>Arrivals</th>
+                                                                <th>New Users</th>
+                                                                <th>Active Users</th>
+                                                                <th>Cash outs</th>
+                                                                <th>Surveys</th>
+                                                                <th>Games Played</th>
+                                                                <th>Hours of Gaming</th>
+                                                                <th>Mobile Arrivals</th>
+                                                                <th>Desktop Arrivals</th>
+                                                                <th>Credits Per Minute</th>
+                                                        </tr>
+                                                </thead>
+                                                <tbody>
+                                                        <% @all_days.each do | d | %>
+                                                                <tr>
+                                                                        <td><%= d.date.strftime("%m/%d/%Y") %></td>
+                                                                        <td><%= d.arrivals %></td>
+                                                                        <td><%= d.sign_ups %></td>
+                                                                        <td><%= d.active_users %></td>
+                                                                        <td><%= d.cash_outs %></td>
+                                                                        <td><%= d.surveys %></td>
+                                                                        <td><%= d.games_played %></td>
+                                                                        <td><%= ((d.time_spent_playing.to_f/60.to_f)/60.to_f).round(2) %></td>
+                                                                        <td><%= d.mobile_arrivals %></td>
+                                                                        <td><%= d.desktop_arrivals%></td>
+                                                                        <td><%= d.credits_per_minute.round(2) %></td>
+                                                                </tr>
+                                                        <% end %>
+                                                </tbody>
+                                        </table>
+                                </div>
+                        </div>
                 </div>
-            </div>
         </div>
-    </div>
 </section>
 <% content_for :extra_js do %>
 
  <script>
-    $('#weeklyTable').DataTable({
-      "paging": true,
-      "lengthChange": true,
-      "searching": false,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false
-    });
+        $('#weeklyTable').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": false,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false
+        });
  </script>
 
  <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Sign Ups", color: "#337ab7", data: @some_days.map{|w| w.sign_ups}},{name: "Active Users", color: "#00a65a", data: @some_days.map{|d| d.active_users}},{name: "Surveys Taken", color: "#dd4b39", data: @some_days.map{|d| d.surveys}}], chart_id: "dailyUsers", labels: @some_days.map{|d| d.date.strftime("%m/%d/%Y")}} %>

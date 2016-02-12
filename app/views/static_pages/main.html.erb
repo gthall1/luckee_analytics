@@ -16,8 +16,8 @@
 
  <%= render partial: "/common/dash_widget", :locals => {data: "$#{@total.cash_payed_out}",title:"Cash Paid Out", icon: "fa-money",bg_color:"green" } %>
     
-
  <%= render partial: "/common/dash_widget", :locals => {data: "#{(@total.avg_time_per_arrival.to_f/60).round(2)} mins",title:"Avg. Time/Arrival", icon: "fa-hourglass-half" } %>
+
 <!-- Main content -->
 <section class="content">
     <!-- TABLE: LATEST ORDERS -->

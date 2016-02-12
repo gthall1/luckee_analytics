@@ -23,8 +23,15 @@
                     <li <% if @active == "daily"%>class="active"<% end %>><a href="/daily">Daily</a></li>
 
                 </ul>
-            </li>            
-            <li><a href="/users"><i class="fa fa-users"></i> <span>Users</span></a></li>
+            </li>   
+            <li class="treeview">
+                <a href="#"><i class="fa fa-users"></i> <span>Users</span> <i class="fa fa-angle-left pull-right"></i></a>
+                <ul class="treeview-menu">
+                    <li><a href="/users"><i class="fa fa-users"></i> <span>All Users</span></a></li>
+                    <li><a href="/active_users"><i class="fa fa-users"></i> <span>Active Users</span></a></li>
+                </ul>
+            </li>                       
+            
             <li class="treeview">
                 <a href="#"><i class="fa fa-gamepad"></i> <span>Games</span> <i class="fa fa-angle-left pull-right"></i></a>
                 <ul class="treeview-menu">

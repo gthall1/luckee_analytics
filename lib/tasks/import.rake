@@ -15,25 +15,34 @@ end
 task :repull_all_data => :environment do |t,args|
 
     p "Wiping all data...#{Time.now}"
-    a = GameSession.all
+    # a = GameSession.all
+    # a.destroy_all
+
+    # a = User.all
+    # a.destroy_all
+
+    # a = Arrival.all
+    # a.destroy_all
+
+    # a = CashOut.all
+    # a.destroy_all
+
+    # a = UserSurvey.all
+    # a.destroy_all
+
+    # a = Survey.all
+    # a.destroy_all
+
+    # a = Game.all
+    # a.destroy_all
+
+    a = WeeklyDatum.all
+    a.destroy_all
+    
+    a = DailyDatum.all
     a.destroy_all
 
-    a = User.all
-    a.destroy_all
-
-    a = Arrival.all
-    a.destroy_all
-
-    a = CashOut.all
-    a.destroy_all
-
-    a = UserSurvey.all
-    a.destroy_all
-
-    a = Survey.all
-    a.destroy_all
-
-    a = Game.all
+    a = MonthlyDatum.all
     a.destroy_all
 
     p "Pulling New Data...#{Time.now}"
@@ -44,13 +53,14 @@ task :repull_all_data => :environment do |t,args|
 end
 
 def grab_data
+     get_arrivals
      get_game_sessions
      get_users
-     get_arrivals
      get_cash_outs
      get_user_surveys
      get_surveys
      get_games 
+
 end
 
 def denormalize_data

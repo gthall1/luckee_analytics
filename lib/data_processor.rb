@@ -23,7 +23,6 @@ module DataProcessor
             next if GameSession.where(id:g["id"].to_i).present?
             next if LUCKEE_USER_IDS.include? g["user_id"]
             next if g["score"] == 0 #eliminate sessions that really had no value
-            p "creating game session "
             GameSession.create({
                 id:g["id"].to_i,
                 user_id:g["user_id"].to_i,
@@ -270,6 +269,9 @@ module DataProcessor
                    
                     u.credits_per_minute = u.credits_from_games.to_f/(u.time_spent_playing.to_f/60.to_f)
                     u.credits_per_game = u.credits_from_games.to_f/game_sessions.size.to_f
+                else
+                    u.credits_per_game = 0
+                    u.credits_per_minute = 0
                 end
 
             end 
@@ -282,6 +284,12 @@ module DataProcessor
                 u.cashed_out_credits = cash_outs.map{|co| co.credits_spent }.sum 
                 u.cost_per_minute = u.cash_out_value.to_f/(u.time_spent_playing.to_f/60.to_f)
                 u.cost_per_game = u.cash_out_value.to_f/game_sessions.size.to_f
+            else
+                u.cash_outs = 0
+                u.cash_out_value = 0
+                u.cashed_out_credits = 0
+                u.cost_per_minute = 0
+                u.cost_per_game = 0
             end
 
             surveys = UserSurvey.where(user_id:u.id,complete:true)
@@ -289,6 +297,9 @@ module DataProcessor
             if !surveys.blank?
                 u.surveys_complete = surveys.size
                 u.credits_from_surveys = surveys.map{|s| Survey.where(id:s.survey_id).first.credits }.sum
+            else
+                u.surveys_complete = 0
+                u.credits_from_surveys = 0
             end
 
             u.save

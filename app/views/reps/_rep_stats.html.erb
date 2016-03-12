@@ -1,0 +1,8 @@
+<div class="col-md-12">
+    <p class="text-center">
+        <strong>Weekly Stats</strong>
+    </p>
+    <% @reps.each do | u | %>
+        <%= render partial: "/common/goal", :locals => {name: u.name, actual: u.weekly_signups, goal: @weekly_user_goal, complete: ((u.weekly_signups.to_f/@weekly_user_goal.to_f) * 100).round(2), color:"blue" } %>
+    <% end %>
+</div><!-- /.col -->

@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
     def index
-        @users = User.all.order('user_created asc')
+        @users = User.all.order('user_created desc')
         @weekly_users = WeeklyDatum.select("date, total_users,active_users").where(:date => Time.now-18.weeks..Time.now).order('date asc') #for weekly growth chart
     end
 
@@ -14,6 +14,7 @@ class UsersController < ApplicationController
 
     def show
         @user = User.find(params[:id])
+        @refered_users = User.where(refered_by_id:@user.id)
         @arrivals = Arrival.where(user_id:@user.id)
         @game_sessions = GameSession.select("count(*), game_id").where(user_id:@user.id).group("game_id")
         @pie_data = @game_sessions.map{|g|   

@@ -27,7 +27,7 @@ module DataProcessor
                 id:g["id"].to_i,
                 user_id:g["user_id"].to_i,
                 game_id: g["game_id"].to_i,
-                credits_earned: g["credits_earned"].to_i,
+                credits_earned: g["credits_applied"].to_i,
                 active: g["active"] == "true",
                 game_session_created: g["created_at"],
                 game_session_updated: g["updated_at"],
@@ -50,18 +50,19 @@ module DataProcessor
             next if LUCKEE_USER_IDS.include? u["id"]
             
             if !User.where(id:u["id"].to_i).present?
-            User.create({
-                id: u["id"],
-                name: u["name"],
-                email: u["email"],
-                user_created: u["created_at"],
-                user_updated: u["updated_at"],
-                current_credits: u["credits"],
-                lifetime_credits: u["lifetime_credits"],
-                arrival_id: u["arrival_id"],
-                provider: u["provider"],
-                active: (u["created_at"] >= Time.now-1.month),
-                cashed_out_credits: u["pending_credits"]
+                User.create({
+                    id: u["id"],
+                    name: u["name"],
+                    email: u["email"],
+                    user_created: u["created_at"],
+                    user_updated: u["updated_at"],
+                    current_credits: u["credits"],
+                    lifetime_credits: u["lifetime_credits"],
+                    arrival_id: u["arrival_id"],
+                    provider: u["provider"],
+                    active: (u["created_at"] >= Time.now-1.month),
+                    cashed_out_credits: u["pending_credits"],
+                    user_type: u["user_type"].to_i == 1 ? "rep" : u["user_type"].to_i == 2 ? "admin" : nil
             })
             else
                 User.find(u["id"]).update_attributes(
@@ -69,7 +70,8 @@ module DataProcessor
                         current_credits:  u["credits"],
                         lifetime_credits: u["lifetime_credits"],
                         cashed_out_credits: u["pending_credits"],
-                        active: Arrival.where(user_id:u["id"].to_i).where(arrival_created: Time.now-1.month..Time.now).present?
+                        active: Arrival.where(user_id:u["id"].to_i).where(arrival_created: Time.now-1.month..Time.now).present?,
+                        user_type: u["user_type"].to_i == 1 ? "rep" : u["user_type"].to_i == 2 ? "admin" : nil
                     )
             end
         end
@@ -91,11 +93,12 @@ module DataProcessor
                     mobile: a["mobile"].to_i,
                     referer: a["referer"],
                     ip: a["ip"],
+                    refered_by_id: a["referred_by"].to_i,
                     user_agent: a["user_agent"],
                     arrival_created: a["created_at"]
                 })
             else
-                Arrival.find(a["id"]).update_attributes(user_id: a["user_id"].to_i)
+                Arrival.find(a["id"]).update_attributes(user_id: a["user_id"].to_i,refered_by_id: a["referred_by"].to_i)
             end
         end
     end
@@ -173,7 +176,12 @@ module DataProcessor
 
     def denormalize_arrivals
         p "Denormalizing arrivals and performing calculations"
-        arrivals = Arrival.where("created_at >= ?", Time.now - 23.hours)
+        # if Rails.env.development?
+        #     last_batch_date = Arrival.where("created_at <= ?", Arrival.last.created_at - 2.minutes).last.created_at
+        #     arrivals = Arrival.where("created_at >= ?", last_batch_date)
+        # else
+            arrivals = Arrival.where("created_at >= ?", Time.now - 23.hours)
+       # end
 
         arrivals.each do | a | 
             arrival = a
@@ -214,6 +222,22 @@ module DataProcessor
                 arrival.cash_out_value = cash_outs.map{ |c | c.cash }.sum
             end
 
+            if !arrival.refered_by_id.blank? && arrival.refered_by_id != 0
+                refer_user = User.where(id:arrival.refered_by_id).first
+                arrival.refered_by_name = !refer_user.nil? ? refer_user.name : arrival.refered_by_id.to_s
+                arrival.refered_by_code = arrival.landing_url
+                arrival.refered_by_type = refer_user.nil? ? "admin" : refer_user.user_type
+                arrival.save
+                if arrival.user_id.blank?
+                    future_arrival_with_user = Arrival.where.not(user_id:nil).where(ip:arrival.ip).where("created_at > ?",arrival.arrival_created).last
+                    if !future_arrival_with_user.blank?
+                        future_arrival_with_user.refered_by_name = arrival.refered_by_name
+                        future_arrival_with_user.refered_by_code = arrival.refered_by_code
+                        future_arrival_with_user.refered_by_type = arrival.refered_by_type
+                        future_arrival_with_user.save
+                    end
+                end
+            end
             if arrival.user_id
                 a_user = User.where(id:a.user_id).first
                 if a_user
@@ -244,12 +268,29 @@ module DataProcessor
             if !u.arrival_id.blank?
                 origin_arrival = Arrival.where(id:u.arrival_id).first
                 if !origin_arrival.blank?
+                    if origin_arrival.user_id.blank?
+                        origin_arrival.user_id = u.id
+                    end
+                    #this is case if they arrive and then set up home screen whihc creates new arrival from new session
+                    if origin_arrival.ip && Arrival.where(ip:origin_arrival.ip,arrival_created: origin_arrival.arrival_created - 1.hour..origin_arrival.arrival_created + 1.minute).first.id != origin_arrival.id
+                        origin_arrival = Arrival.where(ip:origin_arrival.ip,arrival_created: origin_arrival.arrival_created - 1.hour..origin_arrival.arrival_created + 1.minute).first
+                        u.arrival_id = origin_arrival.id
+                        origin_arrival.user_id = u.id
+                    end
+                    if !origin_arrival.refered_by_id.blank? && origin_arrival.refered_by_id != 0
+                        #refered_by_type: nil, refered_by_name: nil, refered_by_id: nil, refered_by_code: nil, user_type: nil
+                        u.refered_by_name = origin_arrival.refered_by_name
+                        u.refered_by_id = origin_arrival.refered_by_id
+                        u.refered_by_code = origin_arrival.refered_by_code
+                        u.refered_by_type = origin_arrival.refered_by_type
+                    end
                     origin_arrival.signup = true
                     origin_arrival.save
                     u.origin_refer = origin_arrival.referer
                     u.origin_device = origin_arrival.platform
                 end
             end
+
             game_sessions = GameSession.where(user_id:u.id)
 
             if !game_sessions.blank?
@@ -273,7 +314,9 @@ module DataProcessor
                     u.credits_per_game = 0
                     u.credits_per_minute = 0
                 end
-
+            else
+                u.credits_per_game = 0
+                u.credits_per_minute = 0      
             end 
 
             cash_outs = CashOut.where(user_id:u.id)
@@ -302,6 +345,8 @@ module DataProcessor
                 u.credits_from_surveys = 0
             end
 
+            u.refered_arrivals = Arrival.where(refered_by_id:u.id).size
+            u.users_refered = User.where(refered_by_id: u.id).size
             u.save
         end
 
@@ -327,12 +372,18 @@ module DataProcessor
                 gs.user_created = user.user_created
                 gs.user_provider = user.provider
             end
+            
             if gs.game_session_updated
                 gs.time_played = gs.game_session_updated - gs.game_session_created
             else
                 gs.time_played = 0
             end
-            gs.credits_per_minute = gs.credits_earned/(gs.time_played.to_f/60.to_f)
+
+            if gs.credits_earned != 0
+                gs.credits_per_minute = gs.credits_earned/(gs.time_played.to_f/60.to_f)
+            else
+                gs.credits_per_minute = 0
+            end
 
             gs.save
         end

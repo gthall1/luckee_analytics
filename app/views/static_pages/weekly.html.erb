@@ -88,6 +88,7 @@
                                 <th>Active Users</th>
                                 <th>User Churn</th>
                                 <th>Cash outs</th>
+                                <th>Cash paid</th>
                                 <th>Surveys</th>
                                 <th>Games Played</th>
                                 <th>Hours of Gaming</th>
@@ -106,6 +107,7 @@
                                     <td><%= w.active_users %></td>
                                     <td><%= w.user_churn %></td>
                                     <td><%= w.cash_outs %></td>
+                                    <td><%= w.cash_payed_out %></td>
                                     <td><%= w.surveys %></td>
                                     <td><%= w.games_played %></td>
                                     <td><%= ((w.time_spent_playing.to_f/60.to_f)/60.to_f).round(2) %></td>

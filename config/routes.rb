@@ -13,6 +13,8 @@ LuckeeMetrics::Application.routes.draw do
   get 'active_users' => 'users#active', as: :active_user
   get 'users/:id' => 'users#show', as: :user
 
+  get 'reps' => 'reps#index', as: :reps
+
   get 'games' => 'games#index'
   get 'games/:id' => 'games#show', as: :game
   # Example of regular route:

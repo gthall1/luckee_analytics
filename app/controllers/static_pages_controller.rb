@@ -23,7 +23,7 @@ class StaticPagesController < ApplicationController
         @total_users = User.all.size
         users_beginning_week = User.where(:user_created => User.first.user_created..Time.now.beginning_of_week).size
         @weekly_user_goal = (users_beginning_week.to_f * 0.1).to_i #10 percent goal
-        @weekly_active_user_goal = prev_week_active + (prev_week_active * 0.15).to_i
+        @weekly_active_user_goal = prev_week_active + (prev_week_active * 0.1).to_i
         @total = WeeklyDatum.last
 
     end

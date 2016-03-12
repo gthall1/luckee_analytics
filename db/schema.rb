@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160212060516) do
+ActiveRecord::Schema.define(version: 20160312185142) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,10 @@ ActiveRecord::Schema.define(version: 20160212060516) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "time_played"
+    t.string   "refered_by_type"
+    t.string   "refered_by_name"
+    t.integer  "refered_by_id"
+    t.string   "refered_by_code"
   end
 
   create_table "cash_outs", force: true do |t|
@@ -236,6 +240,13 @@ ActiveRecord::Schema.define(version: 20160212060516) do
     t.datetime "most_recent_visit"
     t.integer  "visits_this_month"
     t.boolean  "active"
+    t.string   "refered_by_type"
+    t.string   "refered_by_name"
+    t.integer  "refered_by_id"
+    t.string   "refered_by_code"
+    t.string   "user_type"
+    t.integer  "refered_arrivals"
+    t.integer  "users_refered"
   end
 
   create_table "weekly_data", force: true do |t|

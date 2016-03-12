@@ -78,7 +78,64 @@
 
 
 </section><!-- /.content -->
+<% if !@refered_users.blank? %>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Refered Users</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <table id="userTable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Created</th>
+                                <th>Name</th>
+                                <th>Lifetime Credits</th>
+                                <th>Current Credits</th>
+                                <th>Cash Outs</th>
+                                <th>Surveys</th>
+                                <th>Recent Platform</th>
+                                <th>Uniq Games Played</th>
+                                <th>Total Games Played</th>
+                                <th>Hours Played</th>
+                                <th>Credits Per Min</th>
+                                <th>Refered Landings</th>
+                                <th>Refered Users</th>
+                                <th>Visits To Site</th>
+                                <th>Most Recent Visit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% @refered_users.each do | u | %>
+                                <tr>
+                                    <td><%= u.user_created.strftime("%m/%d/%Y") %></td>
+                                    <td><%= link_to u.name, user_path(u.id)%></td>
+                                    <td><%= u.lifetime_credits %></td>
+                                    <td><%= u.current_credits %></td>
+                                    <td><%= u.cash_outs %></td>
+                                    <td><%= u.surveys_complete %></td>
+                                    <td><%= u.most_recent_device %></td>
+                                    <td><%= u.unique_games_played %></td>
+                                    <td><%= u.game_sessions %></td>
+                                    <td><%= ((u.time_spent_playing.to_f/60.to_f)/60.to_f).round(2) %></td>
+                                    <td><%= u.credits_per_minute.round(2) unless u.credits_per_minute.nil? %></td>
+                                    <td><%= u.refered_arrivals %></td>
+                                    <td><%= u.users_refered %></td>
+                                    <td><%= u.visits_to_site %></td>
+                                    <td><%= u.most_recent_visit.strftime("%m/%d/%Y") unless u.most_recent_visit.nil? %></td>
+                                </tr>
+                            <% end %>
+                        </tbody>
 
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<% end %>
 <% content_for :extra_js do %>
   <%= render partial: "/common/piechartjs", :locals => {:dataset => @pie_data, :chart_id => "gameChart"} %>
      <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Total Visits", color: "#00a65a", data: @arrivals.group("DATE_TRUNC('week', arrival_created)").count.sort.map{|u| u[1] }}], chart_id: "totalVisits", labels: @arrivals.group("DATE_TRUNC('week', arrival_created)").count.sort.map{|u| u[0].strftime("%m/%d/%Y")}} %>

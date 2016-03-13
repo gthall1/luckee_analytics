@@ -272,7 +272,7 @@ module DataProcessor
 
         users.each do | user | 
             u = user 
-            user_arrivals = Arrival.where(user_id: u.id)
+            user_arrivals = Arrival.where(user_id: u.id).order('arrival_created asc')
 
             if !user_arrivals.blank?
                 u.visits_to_site = user_arrivals.size

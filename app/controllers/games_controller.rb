@@ -19,7 +19,7 @@ class GamesController < ApplicationController
 
     def show
         @game = Game.find(params[:id])
-        @game_sessions = GameSession.where(game_id:@game.id)
+        @game_sessions = GameSession.where(game_id:@game.id).order('id desc')
         @last_bunch_sessions = GameSession.where(game_id:@game.id).order('id desc').limit(1000)
     end
 end

@@ -62,6 +62,7 @@ module DataProcessor
                     provider: u["provider"],
                     active: (u["created_at"] >= Time.now-1.month),
                     cashed_out_credits: u["pending_credits"],
+                    refer_code: u["referral"],
                     user_type: u["user_type"].to_i == 1 ? "rep" : u["user_type"].to_i == 2 ? "admin" : nil
             })
             else
@@ -70,6 +71,7 @@ module DataProcessor
                         current_credits:  u["credits"],
                         lifetime_credits: u["lifetime_credits"],
                         cashed_out_credits: u["pending_credits"],
+                        refer_code: u["referral"],
                         active: Arrival.where(user_id:u["id"].to_i).where(arrival_created: Time.now-1.month..Time.now).present?,
                         user_type: u["user_type"].to_i == 1 ? "rep" : u["user_type"].to_i == 2 ? "admin" : nil
                     )
@@ -222,6 +224,20 @@ module DataProcessor
                 arrival.cash_out_value = cash_outs.map{ |c | c.cash }.sum
             end
 
+            if !arrival.landing_url.blank? && arrival.landing_url.include?("/invite/")
+                code = arrival.landing_url.split('/').last
+                refered_user_from_code = User.where(refer_code:code).first
+                if refered_user_from_code
+                    arrival.refered_by_id = refered_user_from_code.id
+                end
+            end
+            if !arrival.landing_url.blank? && arrival.landing_url.include?("/r-")
+                code = arrival.landing_url.split('-').last
+                refered_user_from_code = User.where(refer_code:code).first
+                if refered_user_from_code
+                    arrival.refered_by_id = refered_user_from_code.id
+                end
+            end
             if !arrival.refered_by_id.blank? && arrival.refered_by_id != 0
                 refer_user = User.where(id:arrival.refered_by_id).first
                 arrival.refered_by_name = !refer_user.nil? ? refer_user.name : arrival.refered_by_id.to_s
@@ -595,7 +611,7 @@ module DataProcessor
                     cash_outs: cash_outs.size, 
                     active_users: wau.size,
                     user_churn: (prev_wau - wau).size,
-                    surveys: UserSurvey.where(:survey_completed_at =>start_week..end_of_week).size, 
+                    surveys: UserSurvey.where(:survey_taken_at =>start_week..end_of_week).size, 
                     games_played: game_sessions.size, 
                     credits_earned: credits_earned, 
                     cash_payed_out: cash_outs.map{|co| co.cash }.sum, 

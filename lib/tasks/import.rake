@@ -15,26 +15,26 @@ end
 task :repull_all_data => :environment do |t,args|
 
     p "Wiping all data...#{Time.now}"
-    # a = GameSession.all
-    # a.destroy_all
+    a = GameSession.all
+    a.destroy_all
 
-    # a = User.all
-    # a.destroy_all
+    a = User.all
+    a.destroy_all
 
-    # a = Arrival.all
-    # a.destroy_all
+    a = Arrival.all
+    a.destroy_all
 
-    # a = CashOut.all
-    # a.destroy_all
+    a = CashOut.all
+    a.destroy_all
 
-    # a = UserSurvey.all
-    # a.destroy_all
+    a = UserSurvey.all
+    a.destroy_all
 
-    # a = Survey.all
-    # a.destroy_all
+    a = Survey.all
+    a.destroy_all
 
-    # a = Game.all
-    # a.destroy_all
+    a = Game.all
+    a.destroy_all
 
     a = WeeklyDatum.all
     a.destroy_all

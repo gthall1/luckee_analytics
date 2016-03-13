@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160312185142) do
+ActiveRecord::Schema.define(version: 20160313171956) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -247,6 +247,7 @@ ActiveRecord::Schema.define(version: 20160312185142) do
     t.string   "user_type"
     t.integer  "refered_arrivals"
     t.integer  "users_refered"
+    t.string   "refer_code"
   end
 
   create_table "weekly_data", force: true do |t|

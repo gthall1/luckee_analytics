@@ -2,7 +2,7 @@
 <section class="content-header">
   <h1>
     <%= @user.name %>
-    <small><%= @user.email %></small>
+    <small><%= @user.email %>  <% if @user.user_type == 'rep' %> www.getluckee.com/r-<%= @user.refer_code %> <% end %></small>
   </h1>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> Users</a></li>

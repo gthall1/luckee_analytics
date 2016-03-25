@@ -3,7 +3,7 @@ class GamesController < ApplicationController
     def index
         @total = TotalDatum.first
         @games = Game.where.not(device_type:nil)
-        @game_sessions = GameSession.where(:game_session_created => Time.now-1.month..Time.now-15.minutes).order('id desc').limit(500)
+        @game_sessions = GameSession.where(:game_session_created => Time.now-1.month..Time.now-15.minutes).limit(500)
         @weekly_games = WeeklyDatum.select("date, games_played").where(:date => Time.now-18.weeks..Time.now) #for weekly growth chart
         
         all_sessions = GameSession.select("count(*), game_id").group("game_id")
@@ -19,7 +19,7 @@ class GamesController < ApplicationController
 
     def show
         @game = Game.find(params[:id])
-        @game_sessions = GameSession.where(game_id:@game.id).order('id desc')
-        @last_bunch_sessions = GameSession.where(game_id:@game.id).order('id desc').limit(1000)
+        @game_sessions = GameSession.where(game_id:@game.id)
+        @last_bunch_sessions = GameSession.where(game_id:@game.id).limit(1000)
     end
 end

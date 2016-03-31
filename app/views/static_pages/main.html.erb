@@ -90,6 +90,7 @@
                   <th>Type</th>
                   <th>Venmo/Paypal Name</th>
                   <th>Cashout Value</th>
+                  <th>Origin Country</th>
                 </tr>
               </thead>
               <tbody>
@@ -100,6 +101,7 @@
                   <td><%= c.cash_out_type %></td>
                   <td><%= c.cashout_username %></td>
                   <td><%= c.cash %></td>
+                  <td><%= c.user.origin_country %></td>
                 </tr>
                <% end %>
               </tbody>

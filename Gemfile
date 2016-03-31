@@ -23,7 +23,7 @@ gem 'jquery-rails'
 gem 'jbuilder', '~> 1.2'
 
 gem 'pg'
-
+gem 'geoip'
 gem 'useragent'
 
 group :doc do

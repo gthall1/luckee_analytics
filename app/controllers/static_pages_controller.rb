@@ -4,7 +4,7 @@ class StaticPagesController < ApplicationController
         @active = "main"
         @total = TotalDatum.first
         @latest_users = User.order("user_created desc").limit(7)
-        @recent_cash_outs = CashOut.order('cash_out_date desc').limit(7)
+        @recent_cash_outs = CashOut.order('cash_out_date desc').limit(50)
     end
 
     def daily

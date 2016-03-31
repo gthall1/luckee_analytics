@@ -66,6 +66,7 @@ module DataProcessor
                     user_type: u["user_type"].to_i == 1 ? "rep" : u["user_type"].to_i == 2 ? "admin" : nil
             })
             else
+
                 User.find(u["id"]).update_attributes(
                         name: u["name"],
                         current_credits:  u["credits"],
@@ -302,6 +303,12 @@ module DataProcessor
                     end
                     origin_arrival.signup = true
                     origin_arrival.save
+                    if u.origin_country.blank? 
+                        country_name = $geo.country(origin_arrival.ip).country_name
+                        sleep 0.25 #for not hammering geo methods
+                        u.origin_country = country_name
+                        country_name = nil
+                    end
                     u.origin_refer = origin_arrival.referer
                     u.origin_device = origin_arrival.platform
                 end

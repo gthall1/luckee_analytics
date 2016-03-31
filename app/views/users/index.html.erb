@@ -76,6 +76,7 @@
                                 <th>Credits Per Min</th>
                                 <th>Refered Landings</th>
                                 <th>Refered Users</th>
+                                <th>Country</th>
                                 <th>Visits To Site</th>
                                 <th>Most Recent Visit</th>
                             </tr>
@@ -96,6 +97,7 @@
                                     <td><%= u.credits_per_minute.round(2) unless u.credits_per_minute.nil? %></td>
                                     <td><%= u.refered_arrivals %></td>
                                     <td><%= u.users_refered %></td>
+                                    <td><%= u.origin_country %></td>
                                     <td><%= u.visits_to_site %></td>
                                     <td><%= u.most_recent_visit.strftime("%m/%d/%Y") unless u.most_recent_visit.nil? %></td>
                                 </tr>

@@ -87,7 +87,7 @@ module ImportHelper
         case slug
             when "gs"
                 #game can be updated with more score/credit data, so try and nix ones that could be out of dates
-                stale_games = GameSession.where(:game_session_created => Time.now-3.days..Time.now)
+                stale_games = GameSession.where(:game_session_created => Time.now-1.days..Time.now)
                 stale_games.destroy_all                
                 return GameSession.last.id unless GameSession.last.blank?
             when "u"

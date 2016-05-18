@@ -439,9 +439,7 @@ module DataProcessor
 
     def denormalize_surveys
         p "Denormalizing surveys and performing calculations"
-        Survey.find_each do | survey |
-            s = survey
-
+        Survey.find_each do | s |
             user_surveys = UserSurvey.where(survey_id: s.id,complete: true)
             if !user_surveys.blank? && !user_surveys.empty?
                 s.surveys_completed = user_surveys.size
@@ -719,7 +717,7 @@ module DataProcessor
             desktop_arrivals: Arrival.where(mobile:0).size, 
             credits_per_minute: credits_earned.to_f/(time_spent_playing.to_f/60.to_f),
             cost_per_minute:  cash_payed/(time_spent_playing.to_f/60.to_f),
-            avg_time_per_arrival: time_spent_playing.to_f/arrivals.to_f
+            avg_time_per_arrival: (time_spent_playing.to_f/60.to_f)/arrivals.to_f
         })
 
 

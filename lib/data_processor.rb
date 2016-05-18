@@ -698,7 +698,8 @@ module DataProcessor
         #                                 (time = 0 if time > 2000) #just too long, lets say somehting bugged
         #                                 time.to_i
         #                             }.sum
-        time_spent_playing = GameSession.sum(:time_played)
+        
+        time_spent_playing = MonthlyDatum.sum(:time_spent_playing)
        # cash_payed = cash_outs.map{|co| co.cash }.sum
         cash_payed = CashOut.sum(:cash)
         games_played = GameSession.count

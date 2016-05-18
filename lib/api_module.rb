@@ -1,18 +1,11 @@
 #Methods for calling luckee api
 module ApiModule
-require "net/http"
-require "uri"
+    require "net/http"
+    require "uri"
 
     def get_request_data(uri)
-          url = URI.parse(uri)
-          # = Net::HTTP.new(url.host, url.port)
-          response = Net::HTTP.get_response(url)
-
-        #  http.use_ssl = true
-        #  http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-         # request = Net::HTTP::Get.new(url.path) 
-          #response = http.request(request)  
-
+        url = URI.parse(uri)
+        response = Net::HTTP.get_response(url)
         JSON.parse response.body
     end
 

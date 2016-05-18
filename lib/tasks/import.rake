@@ -12,6 +12,39 @@ task :import_data => :environment do |t,args|
     aggregate_data
 end
 
+task :google_analytics => :environment do | t, args | 
+    require 'google/apis/analytics_v3'
+    Analytics = Google::Apis::AnalyticsV3
+    analytics = Analytics::AnalyticsService.new
+
+    authorizer = Google::Auth::ServiceAccountCredentials.make_creds({json_key_io: File.open(ENV['GOOGLE_APPLICATION_CREDENTIALS']),scope: 'https://www.googleapis.com/auth/analytics.readonly'})
+    authorizer.fetch_access_token!
+
+    analytics.authorization = authorizer
+    profile_id = '100625219'
+    dimensions = %w(ga:date)
+    
+    metrics = %w(ga:sessions ga:users ga:newUsers ga:percentNewSessions
+                   ga:sessionDuration ga:avgSessionDuration)
+
+    sort = %w(ga:date)
+    options = Hash.new
+    options[:start] = '2016-04-01'
+    options[:end] = '2016-04-29'
+    result = analytics.get_ga_data("ga:#{profile_id}",
+                                     options[:start],
+                                     options[:end],
+                                     metrics.join(','),
+                                     dimensions: dimensions.join(','),
+                                     sort: sort.join(','))
+
+    p result
+
+    data = []
+    data.push(result.column_headers.map { |h| h.name })
+    data.push(*result.rows)
+   # print_table(data)
+end
 task :repull_all_data => :environment do |t,args|
 
     p "Wiping all data...#{Time.now}"

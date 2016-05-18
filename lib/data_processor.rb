@@ -378,9 +378,8 @@ module DataProcessor
     def denormalize_game_sessions
         p "Denormalizing game sessions and performing calculations"
 
-        game_sessions = GameSession.where("created_at >= ?", Time.now - 23.hours)
 
-        game_sessions.each do | game_session| 
+         GameSession.where("created_at >= ?", Time.now - 23.hours).find_each do | game_session| 
             gs = game_session
 
             arrival = Arrival.where(id:gs.arrival_id).first
@@ -443,9 +442,8 @@ module DataProcessor
     end
 
     def denormalize_surveys
-        surveys = Survey.all
 
-        surveys.each do | survey |
+        Survey.find_each do | survey |
             s = survey
 
             user_surveys = UserSurvey.where(survey_id: s.id,complete: true)
@@ -528,7 +526,7 @@ module DataProcessor
         start_date = User.first.user_created.beginning_of_day
         end_of_day = start_date.end_of_day 
 
-        if DailyDatum.all.size > 0
+        if DailyDatum.count > 0
             #go back a few days just to make sure we got everything
             start_date = (DailyDatum.last.date-3.days).beginning_of_day
             end_of_day = start_date.end_of_day  
@@ -693,39 +691,41 @@ module DataProcessor
 
     def aggregate_total_data
 
-        a = TotalDatum.all
-        a.destroy_all
+        TotalDatum.destroy_all
 
         p "Loading Totals"
-        game_sessions = GameSession.all
-        cash_outs = CashOut.all
-        arrivals = Arrival.all
+       # game_sessions = GameSession.all
+        #cash_outs = CashOut.all
+        #arrivals = Arrival.all
 
-        credits_earned = game_sessions.map{|ga| ga.credits_earned }.sum
+        credits_earned = GameSession.sum(:credits_earned)
         #Time spent is in seconds
-        time_spent_playing = game_sessions.map{|ga| 
-                                        time = ga.game_session_updated - ga.game_session_created  
-                                        time = 0 if time > 2000 #just too long, lets say somehting bugged
-                                        time.to_i
-                                    }.sum
-        cash_payed = cash_outs.map{|co| co.cash }.sum
-
-        TotalDatum.create({
-                arrivals: arrivals.size, 
-                users: User.all.size, 
-                cash_outs: cash_outs.size, 
-                surveys: UserSurvey.all.size, 
-                games_played: game_sessions.size, 
-                credits_earned: credits_earned, 
-                cash_payed_out: cash_payed, 
-                time_spent_playing: time_spent_playing, 
-                mobile_arrivals: arrivals.where(mobile:1).size, 
-                games_per_arrival: game_sessions.size.to_f/arrivals.size.to_f, 
-                desktop_arrivals: arrivals.where(mobile:0).size, 
-                credits_per_minute: credits_earned.to_f/(time_spent_playing.to_f/60.to_f),
-                cost_per_minute:  cash_payed/(time_spent_playing.to_f/60.to_f),
-                avg_time_per_arrival: time_spent_playing.to_f/arrivals.size.to_f
-            })
+        # time_spent_playing = game_sessions.map{|ga| 
+        #                                 time = ga.game_session_updated - ga.game_session_created  
+        #                                 (time = 0 if time > 2000) #just too long, lets say somehting bugged
+        #                                 time.to_i
+        #                             }.sum
+        time_spent_playing = GameSession.sum(:time_played)
+       # cash_payed = cash_outs.map{|co| co.cash }.sum
+        cash_payed = CashOut.sum(:cash)
+        games_played = GameSession.count
+        arrivals = Arrival.count
+       b = TotalDatum.create({
+            arrivals: arrivals, 
+            users: User.count, 
+            cash_outs: CashOut.count, 
+            surveys: UserSurvey.count, 
+            games_played: games_played, 
+            credits_earned: credits_earned, 
+            cash_payed_out: cash_payed, 
+            time_spent_playing: time_spent_playing, 
+            mobile_arrivals: Arrival.where(mobile:1).size, 
+            games_per_arrival: games_played.to_f/arrivals.size.to_f, 
+            desktop_arrivals: Arrival.where(mobile:0).size, 
+            credits_per_minute: credits_earned.to_f/(time_spent_playing.to_f/60.to_f),
+            cost_per_minute:  cash_payed/(time_spent_playing.to_f/60.to_f),
+            avg_time_per_arrival: time_spent_playing.to_f/arrivals.to_f
+        })
 
 
 

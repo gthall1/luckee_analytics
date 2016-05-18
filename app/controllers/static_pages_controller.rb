@@ -20,7 +20,7 @@ class StaticPagesController < ApplicationController
         @some_weeks = WeeklyDatum.where(:date => Time.now - 10.weeks..Time.now).order('date asc')
         @all_weeks = WeeklyDatum.all.order('date desc')
         @active = "weekly"
-        @total_users = User.all.size
+        @total_users = User.count
         users_beginning_week = User.where(:user_created => User.first.user_created..Time.now.beginning_of_week).size
         @weekly_user_goal = (users_beginning_week.to_f * 0.1).to_i #10 percent goal
         @weekly_active_user_goal = prev_week_active + (prev_week_active * 0.1).to_i
@@ -32,7 +32,7 @@ class StaticPagesController < ApplicationController
         @all_months = MonthlyDatum.all.order('date desc')
         @some_months = MonthlyDatum.where(:date => Time.now - 6.months..Time.now).order('date asc')
         @active = "monthly"
-        @total_users = User.all.size
+        @total_users = User.count
         week1 = @total_users + (@total_users.to_f * 0.25).to_i #25 percent goal
         week2 = week1 + (week1.to_f * 0.25).to_i 
         week3 = week2 + (week2.to_f * 0.25).to_i 

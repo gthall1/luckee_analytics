@@ -7,7 +7,7 @@ include ImportHelper
 BATCH_SIZE = 300
 
 task :import_data => :environment do |t,args|
-    grab_data
+   # grab_data
     denormalize_data
     aggregate_data
 end

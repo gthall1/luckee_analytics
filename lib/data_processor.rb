@@ -417,22 +417,18 @@ module DataProcessor
 
         games.each do | game|
             g = game 
-            game_sessions = GameSession.where(game_id:g.id)
-            if !game_sessions.blank?
-                g.total_credits_earned = game_sessions.map{|ga| ga.credits_earned }.sum
-                g.total_time_spent_on_game = game_sessions.map{|ga| 
+            #game_sessions = GameSession.where(game_id:g.id)
+            if !GameSession.where(game_id:g.id).blank?
+                g.total_credits_earned =  GameSession.where(game_id:g.id).sum(:credits_earned)
+                g.total_time_spent_on_game = GameSession.where(game_id:g.id).map{|ga| 
                     time = ga.game_session_updated - ga.game_session_created  
                     time = 0 if time > 2000 #just too long, lets say somehting bugged
                     time.to_i
                 }.sum
-                g.total_users_who_played = game_sessions.map{|ga| ga.user_id}.uniq.size
-                g.total_games_played = game_sessions.size
+                g.total_users_who_played = GameSession.where(game_id:g.id).group(:user_id).size.size
+                g.total_games_played = GameSession.where(game_id:g.id).count
                 g.time_per_game = g.total_time_spent_on_game.to_f/g.total_games_played.to_f
-                g.avg_score = (game_sessions.map{|ga| 
-                        score = ga.score 
-                        score = 0 if ga.score.nil? 
-                        score
-                        }.sum.to_f)/g.total_games_played.to_f
+                g.avg_score = GameSession.where(game_id:g.id).average(:score).to_f
                 g.credits_per_minute= g.total_credits_earned/(g.total_time_spent_on_game.to_f/60.to_f)
                 g.credits_per_game = g.total_credits_earned.to_f/g.total_games_played.to_f
                 g.save
@@ -442,7 +438,7 @@ module DataProcessor
     end
 
     def denormalize_surveys
-
+        p "Denormalizing surveys and performing calculations"
         Survey.find_each do | survey |
             s = survey
 
@@ -467,12 +463,11 @@ module DataProcessor
 
     end
 
-    def denormalize_cashouts    
-        cashouts = CashOut.all
+    def denormalize_cashouts   
+    p "Denormalizing cashouts and performing calculations"
+ 
 
-        cashouts.each do |cashout|
-            co = cashout
-
+        CashOut.find_each do |co|
             u = User.where(id:co.user_id).first
 
             if !u.blank?
@@ -495,10 +490,10 @@ module DataProcessor
     end 
 
     def denormalize_user_surveys
-        user_surveys = UserSurvey.where(complete:true)
+        p "Denormalizing user surveys and performing calculations"
 
-        user_surveys.each do |usersurvey|
-            us = usersurvey
+
+         UserSurvey.where(complete:true).find_each do |us|
             u = User.where(id:us.user_id).first
             if !u.blank?
                 us.user_created_at = u.user_created

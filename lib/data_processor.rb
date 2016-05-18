@@ -715,7 +715,7 @@ module DataProcessor
             cash_payed_out: cash_payed, 
             time_spent_playing: time_spent_playing, 
             mobile_arrivals: Arrival.where(mobile:1).size, 
-            games_per_arrival: games_played.to_f/arrivals.size.to_f, 
+            games_per_arrival: games_played.to_f/arrivals.to_f, 
             desktop_arrivals: Arrival.where(mobile:0).size, 
             credits_per_minute: credits_earned.to_f/(time_spent_playing.to_f/60.to_f),
             cost_per_minute:  cash_payed/(time_spent_playing.to_f/60.to_f),

@@ -269,10 +269,9 @@ module DataProcessor
 
     def denormalize_users
         p "Denormalizing users and performing calculations"
-        users = User.all
+    
 
-        users.each do | user | 
-            u = user 
+        User.find_each do | u | 
             user_arrivals = Arrival.where(user_id: u.id).order('arrival_created asc')
 
             if !user_arrivals.blank?
@@ -379,8 +378,7 @@ module DataProcessor
         p "Denormalizing game sessions and performing calculations"
 
 
-         GameSession.where("created_at >= ?", Time.now - 23.hours).find_each do | game_session| 
-            gs = game_session
+         GameSession.where("created_at >= ?", Time.now - 23.hours).find_each do | gs| 
 
             arrival = Arrival.where(id:gs.arrival_id).first
             if !arrival.blank?
@@ -523,8 +521,7 @@ module DataProcessor
             #go back a few days just to make sure we got everything
             start_date = (DailyDatum.last.date-3.days).beginning_of_day
             end_of_day = start_date.end_of_day  
-            a = DailyDatum.where(:date => start_date..Time.now)
-            a.destroy_all
+            DailyDatum.where(:date => start_date..Time.now).destroy_all
         end
 
         loop do 
@@ -576,12 +573,11 @@ module DataProcessor
         start_week = User.first.user_created.beginning_of_week
         end_of_week = start_week.end_of_week 
 
-        if WeeklyDatum.all.size > 0
+        if WeeklyDatum.count > 0
             #go back a week just to make sure we got everything
             start_week = (WeeklyDatum.last.date-1.week).beginning_of_week
             end_of_week = start_week.end_of_week  
-            a = WeeklyDatum.where(:date => start_week..Time.now)
-            a.destroy_all
+            a = WeeklyDatum.where(:date => start_week..Time.now).destroy_all
         end
 
         loop do 
@@ -632,7 +628,7 @@ module DataProcessor
         start_month = User.first.user_created.beginning_of_month
         end_of_month = start_month.end_of_month
 
-        if MonthlyDatum.all.size > 0
+        if MonthlyDatum.count > 0
             #go back a month just to make sure we got everything
             start_month = (MonthlyDatum.last.date-1.month).beginning_of_month
             end_of_month = start_month.end_of_month  
@@ -698,13 +694,13 @@ module DataProcessor
         #                                 (time = 0 if time > 2000) #just too long, lets say somehting bugged
         #                                 time.to_i
         #                             }.sum
-        
+
         time_spent_playing = MonthlyDatum.sum(:time_spent_playing)
        # cash_payed = cash_outs.map{|co| co.cash }.sum
         cash_payed = CashOut.sum(:cash)
         games_played = GameSession.count
         arrivals = Arrival.count
-       b = TotalDatum.create({
+        b = TotalDatum.create({
             arrivals: arrivals, 
             users: User.count, 
             cash_outs: CashOut.count, 
@@ -720,8 +716,6 @@ module DataProcessor
             cost_per_minute:  cash_payed/(time_spent_playing.to_f/60.to_f),
             avg_time_per_arrival: (time_spent_playing.to_f/60.to_f)/arrivals.to_f
         })
-
-
 
     end          
 end

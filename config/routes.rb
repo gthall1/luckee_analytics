@@ -7,6 +7,7 @@ LuckeeMetrics::Application.routes.draw do
 
   get 'weekly' => 'static_pages#weekly'
   get 'monthly' => 'static_pages#monthly'
+  get 'custom' => 'static_pages#custom'
   get 'daily' => 'static_pages#daily'
 
   get 'users' => 'users#index'

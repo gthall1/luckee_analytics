@@ -43,6 +43,7 @@
         </div>
     </div>
 </div>
+
 <%= render partial: "/common/dash_widget", :locals => {data: @user.game_sessions, title: "Games Played", icon: "fa-gamepad" } %>
             
 <%= render partial: "/common/dash_widget", :locals => {data: @user.credits_per_game.round(2),title:"Credits Per Game", icon: "fa-industry" } %>
@@ -74,8 +75,57 @@
 
 
 
-<br style='clear: both' />
 
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                    <h3 class="box-title">Last 500 Game Sessions</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                    <table id="gameTable" class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Started</th>
+                                <th>Game Name</th>
+                                <th>Credits Earned</th>
+                                <th>Minutes Played</th>
+                                <th>User</th>
+                                <th>Score</th>
+                                <th>Active</th>
+                                <th>Browser</th>
+                                <th>Platform</th>
+                                <th>Credits Per Minute</th>
+                                <th>Version</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <% @last_bunch_sessions.each do | g | %>
+                                <tr>
+                                    <td><%= g.game_session_created.strftime("%m/%d/%Y") %></td>
+                                    <td><%= g.game.name %></td>
+                                    <td><%= g.credits_earned %></td>
+                                    <td><%= (g.time_played.to_f/60.to_f).round(2) %></td>
+                                    <td><%= link_to g.user.name, user_path(g.user.id) unless g.user.nil?%></td>
+                                    <td><%= g.score %></td>
+                                    <td><%= g.active %></td>
+                                    <td><%= g.arrival.browser  if !g.arrival.nil? %></td>
+                                    <td><%= g.arrival.platform if !g.arrival.nil? %></td>
+                                    <td><%= g.credits_per_minute.round(2) if !g.credits_per_minute.nil? %></td>
+                                    <td><%= g.version %></td>
+                                </tr>
+                            <% end %>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<br style='clear: both' />
 
 </section><!-- /.content -->
 <% if !@refered_users.blank? %>
@@ -137,6 +187,16 @@
 </section>
 <% end %>
 <% content_for :extra_js do %>
+ <script>
+    $('#gameTable').DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": true
+    });
+ </script>
   <%= render partial: "/common/piechartjs", :locals => {:dataset => @pie_data, :chart_id => "gameChart"} %>
      <%= render partial: "/common/chartjs", :locals => {:dataset => [{name: "Total Visits", color: "#00a65a", data: @arrivals.group("DATE_TRUNC('week', arrival_created)").count.sort.map{|u| u[1] }}], chart_id: "totalVisits", labels: @arrivals.group("DATE_TRUNC('week', arrival_created)").count.sort.map{|u| u[0].strftime("%m/%d/%Y")}} %>
 <% end %>

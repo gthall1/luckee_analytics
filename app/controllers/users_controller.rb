@@ -20,5 +20,6 @@ class UsersController < ApplicationController
         @pie_data = @game_sessions.map{|g|   
              {label: Game.where(id:g.game_id).first.name,  value: g.count }
            }
+        @last_bunch_sessions = GameSession.where(user_id:@user.id).order('game_session_created desc').limit(500)
     end
 end

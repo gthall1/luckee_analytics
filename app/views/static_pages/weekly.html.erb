@@ -87,6 +87,7 @@
                                 <th>Total Users</th>
                                 <th>Active Users</th>
                                 <th>User Churn</th>
+                                <th>Credits Earned</th>
                                 <th>Cash outs</th>
                                 <th>Cash paid</th>
                                 <th>Surveys</th>
@@ -106,6 +107,7 @@
                                     <td><%= User.where(:user_created=>User.order('user_created asc').first.user_created..w.date.end_of_week).size %></td>
                                     <td><%= w.active_users %></td>
                                     <td><%= w.user_churn %></td>
+                                    <td><%= w.credits_earned %></td>
                                     <td><%= w.cash_outs %></td>
                                     <td><%= w.cash_payed_out %></td>
                                     <td><%= w.surveys %></td>

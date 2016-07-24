@@ -29,29 +29,28 @@ class StaticPagesController < ApplicationController
     end
 
     def custom
-        if params[:start] && !params[:start].blank? && params[:end] && !params[:end].blank?
-          @start_date = DateTime.new(params[:start]["date(1i)"].to_i,params[:start]["date(2i)"].to_i,params[:start]["date(3i)"].to_i).beginning_of_day
-          @end_date = DateTime.new(params[:end]["date(1i)"].to_i,params[:end]["date(2i)"].to_i,params[:end]["date(3i)"].to_i).beginning_of_day
-        else
-          @start_date = (Time.now - 1.week).beginning_of_day
-          @end_date = Time.now.end_of_day
-        end
-          @dates = DailyDatum.where(:date => @start_date..@end_date).order('date asc')
+      if params[:start] && !params[:start].blank? && params[:end] && !params[:end].blank?
+        @start_date = DateTime.new(params[:start]["date(1i)"].to_i,params[:start]["date(2i)"].to_i,params[:start]["date(3i)"].to_i).beginning_of_day
+        @end_date = DateTime.new(params[:end]["date(1i)"].to_i,params[:end]["date(2i)"].to_i,params[:end]["date(3i)"].to_i).beginning_of_day
+      else
+        @start_date = (Time.now - 1.week).beginning_of_day
+        @end_date = Time.now.end_of_day
+      end
+        @dates = DailyDatum.where(:date => @start_date..@end_date).order('date asc')
 
-          @games_played = @dates.sum(:games_played)
-          @time_spent_playing = (@dates.sum(:time_spent_playing).to_f/60.to_f/60.to_f).round(2)
-          @credits_earned =  @dates.sum(:credits_earned)
-          @cash_outs = @dates.sum(:cash_outs)
-          @cash_payed = @dates.sum(:cash_payed_out)
-          @credits_per_minute = @dates.average(:credits_per_minute).round(2)
-          @desktop_arrivals = @dates.sum(:desktop_arrivals)
-          @mobile_arrivals = @dates.sum(:mobile_arrivals)
-          @total_arrivals = @dates.sum(:arrivals)
-          @sign_ups = @dates.sum(:sign_ups)
-          @active_users = @dates.sum(:active_users)
-          @surveys = @dates.sum(:surveys)
-
-
+        @games_played = @dates.sum(:games_played)
+        @time_spent_playing = (@dates.sum(:time_spent_playing).to_f/60.to_f/60.to_f).round(2)
+        @credits_earned =  @dates.sum(:credits_earned)
+        @cash_outs = @dates.sum(:cash_outs)
+        @cash_payed = @dates.sum(:cash_payed_out)
+        @credits_per_minute = @dates.average(:credits_per_minute).round(2)
+        @desktop_arrivals = @dates.sum(:desktop_arrivals)
+        @mobile_arrivals = @dates.sum(:mobile_arrivals)
+        @total_arrivals = @dates.sum(:arrivals)
+        @sign_ups = @dates.sum(:sign_ups)
+        @active_users = @dates.sum(:active_users)
+        @surveys = @dates.sum(:surveys)
+        
     end
 
     def monthly
